@@ -1,0 +1,19 @@
+{
+  "name": "the-link-trials",
+  "version": "1.0.0",
+  "description": "Trabalho de IA",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasmc64/ia.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucasmc64/ia/issues"
+  },
+  "homepage": "https://github.com/lucasmc64/ia#readme"
+}
