@@ -1,16 +1,54 @@
-const hyruleTerrains = new Map([
-  ["grass", { cost: 10, label: "Grama", color: "#92d050" }],
-  ["sand", { cost: 20, label: "Areia", color: "#c4bc96" }],
-  ["forest", { cost: 100, label: "Floresta", color: "#00b050" }],
-  ["mountain", { cost: 150, label: "Montanha", color: "#948a54" }],
-  ["water", { cost: 180, label: "Água", color: "#548dd4" }],
-]);
+import Link from "./classes/Link.js";
+import {
+  hyruleTerrains,
+  dungeonTerrains,
+  hyruleLocales,
+  powerDungeonLocales,
+  courageDungeonLocales,
+  wisdomDungeonLocales,
+  hyruleMap,
+  powerDungeonMap,
+  courageDungeonMap,
+  wisdomDungeonMap,
+} from "./consts.js";
 
-const dungeonTerrains = new Map([
-  ["path", { cost: 10, label: "Caminho", color: "#e1e1e1" }],
-  ["wall", { cost: null, label: "Parede", color: "#b7b7b7" }],
-]);
+const divTest = window.document.getElementById("map-test");
 
-terrains.get("grass");
+function printMap(map, terrains, where) {
+  map.forEach((line) => {
+    line.split("").forEach((key) => {
+      const divTerrain = window.document.createElement("div");
 
-const hyruleMap = [42][42];
+      divTerrain.classList.add("box");
+      divTerrain.style.backgroundColor = terrains.get(key).color;
+
+      where.appendChild(divTerrain);
+    });
+
+    where.insertAdjacentHTML("beforeend", "<br />");
+  });
+}
+
+printMap(
+  hyruleMap,
+  hyruleTerrains,
+  window.document.getElementById("hyruleMap"),
+);
+
+printMap(
+  powerDungeonMap,
+  dungeonTerrains,
+  window.document.getElementById("powerDungeonMap"),
+);
+
+printMap(
+  courageDungeonMap,
+  dungeonTerrains,
+  window.document.getElementById("courageDungeonMap"),
+);
+
+printMap(
+  wisdomDungeonMap,
+  dungeonTerrains,
+  window.document.getElementById("wisdomDungeonMap"),
+);
