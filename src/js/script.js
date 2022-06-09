@@ -29,6 +29,20 @@ function printMap(map, terrains, where) {
   });
 }
 
+// V Com problemas V
+// function printMapCanvas(map, terrains, where, sizeMap, sizeTile) {  //sizeMap -> dimensção do mapa; sizeTile -> tamanho de cada quadrado
+//   var canvas = where;
+//   var ctx = canvas.getContext("2d");
+
+//   for (var y = 0; j < sizeMap; j++) {
+//     for (var x = 0; x < sizeMap; x++) {
+//       ctx.fillStyle = terrains.get(map[x][y]).color;
+//       ctx.fillRect(x*sizeTile, y*sizeTile, sizeTile, sizeTile);
+//     }
+//   }
+
+// }
+
 printMap(
   hyruleMap,
   hyruleTerrains,
@@ -52,3 +66,12 @@ printMap(
   dungeonTerrains,
   window.document.getElementById("wisdomDungeonMap"),
 );
+
+// V Com problemas V
+// printMapCanvas(
+//   hyruleMap,
+//   hyruleTerrains,
+//   window.document.getElementById("hyruleMapCanvas"),
+//   42,
+//   11,
+// );
