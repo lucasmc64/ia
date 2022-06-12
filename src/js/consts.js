@@ -1,3 +1,6 @@
+//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
+// Terrains
+
 const hyruleTerrains = new Map([
   ["g", { cost: 10, label: "Grama", color: "#92d050" }],
   ["s", { cost: 20, label: "Areia", color: "#c4bc96" }],
@@ -11,28 +14,51 @@ const dungeonTerrains = new Map([
   ["w", { cost: null, label: "Parede", color: "#b7b7b7" }],
 ]);
 
+//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
+// Images
+
+const dungeonDoorImage = new Image();
+const lostWoodsDoorImage = new Image();
+const masterSwordImage = new Image();
+const pendantOfPowerImage = new Image();
+const pendantOfCourageImage = new Image();
+const pendantOfWisdomImage = new Image();
+
+dungeonDoorImage.src = "";
+lostWoodsDoorImage.src = "";
+masterSwordImage.src = "";
+pendantOfPowerImage.src = "";
+pendantOfCourageImage.src = "";
+pendantOfWisdomImage.src = "";
+
+//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
+// Locales
+
 const hyruleLocales = new Map([
-  ["powerDungeon", { x: 5, y: 32 }],
-  ["courageDungeon", { x: 39, y: 17 }],
-  ["wisdomDungeon", { x: 24, y: 1 }],
-  ["lostWoods", { x: 6, y: 5 }],
-  ["masterSword", { x: 2, y: 1 }],
+  ["powerDungeon", { x: 5, y: 32, image: dungeonDoorImage }],
+  ["courageDungeon", { x: 39, y: 17, image: dungeonDoorImage }],
+  ["wisdomDungeon", { x: 24, y: 1, image: dungeonDoorImage }],
+  ["lostWoods", { x: 6, y: 5, image: lostWoodsDoorImage }],
+  ["masterSword", { x: 2, y: 1, image: masterSwordImage }],
 ]);
 
 const powerDungeonLocales = new Map([
-  ["exit", { x: 14, y: 26 }],
-  ["pendantOfPower", { x: 13, y: 3 }],
+  ["exit", { x: 14, y: 26, image: dungeonDoorImage }],
+  ["pendantOfPower", { x: 13, y: 3, image: pendantOfPowerImage }],
 ]);
 
 const courageDungeonLocales = new Map([
-  ["exit", { x: 13, y: 25 }],
-  ["pendantOfCourage", { x: 13, y: 2 }],
+  ["exit", { x: 13, y: 25, image: dungeonDoorImage }],
+  ["pendantOfCourage", { x: 13, y: 2, image: pendantOfCourageImage }],
 ]);
 
 const wisdomDungeonLocales = new Map([
-  ["exit", { x: 14, y: 25 }],
-  ["pendantOfWisdom", { x: 15, y: 19 }],
+  ["exit", { x: 14, y: 25, image: dungeonDoorImage }],
+  ["pendantOfWisdom", { x: 15, y: 19, image: pendantOfWisdomImage }],
 ]);
+
+//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
+// Maps
 
 const hyruleMap = [
   "fffffffffffffffmmmmmmmmmmmmmmmmmmmmmmmmmmm",
@@ -172,6 +198,15 @@ const wisdomDungeonMap = [
   "wwwwwwwwwwwwwwwwwwwwwwwwwwww",
 ];
 
+//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
+// Other consts
+
+const tileSize = 15;
+const defaultBackgroundColor = "#ffffff";
+
+//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
+// Exports
+
 export {
   hyruleTerrains,
   dungeonTerrains,
@@ -183,4 +218,6 @@ export {
   powerDungeonMap,
   courageDungeonMap,
   wisdomDungeonMap,
+  tileSize,
+  defaultBackgroundColor,
 };
