@@ -1,3 +1,4 @@
+import App from "./classes/App.js";
 import Link from "./classes/Link.js";
 import {
   hyruleTerrains,
@@ -6,72 +7,103 @@ import {
   powerDungeonLocales,
   courageDungeonLocales,
   wisdomDungeonLocales,
+  tileSize,
+  defaultBackgroundColor,
+} from "./consts.js";
+import {
   hyruleMap,
   powerDungeonMap,
   courageDungeonMap,
   wisdomDungeonMap,
-} from "./consts.js";
+} from "./maps.js";
 
-const divTest = window.document.getElementById("map-test");
+const canvas = window.document.getElementById("map");
+const context = canvas.getContext("2d");
 
-function printMap(map, terrains, where) {
-  map.forEach((line) => {
-    line.split("").forEach((key) => {
-      const divTerrain = window.document.createElement("div");
+const app = new App();
+const link = new Link(25, 28);
 
-      divTerrain.classList.add("box");
-      divTerrain.style.backgroundColor = terrains.get(key).color;
+function drawMap() {
+  console.log("Drawing!");
 
-      where.appendChild(divTerrain);
-    });
+  if (!app.previousMap && !app.previousTerrains) {
+    for (let y = 0; y < app.currentMap.length; y++) {
+      for (let x = 0; x < app.currentMap.length; x++) {
+        const key = app.currentMap[y][x];
 
-    where.insertAdjacentHTML("beforeend", "<br />");
-  });
+        if (key !== "-") {
+          context.fillStyle = app.currentTerrains.get(key).color;
+
+          context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+          context.strokeRect(x * tileSize, y * tileSize, tileSize, tileSize);
+        } else {
+          context.fillStyle = defaultBackgroundColor;
+        }
+      }
+    }
+  } else {
+    function updateDrawMap(y, stage = -9) {
+      for (let x = 0; x < app.currentMap.length; x++) {
+        const key = stage > 0 ? app.currentMap[y][x] : app.previousMap[y][x];
+
+        context.clearRect(x * tileSize, y * tileSize, tileSize, tileSize);
+
+        if (key !== "-") {
+          context.fillStyle =
+            stage > 0
+              ? app.currentTerrains.get(key).color
+              : app.previousTerrains.get(key).color;
+
+          context.strokeRect(
+            x * tileSize,
+            y * tileSize +
+              (tileSize - Math.abs((tileSize * (stage * 10)) / 100)) / 2,
+            tileSize,
+            Math.abs((tileSize * (stage * 10)) / 100),
+          );
+        } else {
+          context.fillStyle = defaultBackgroundColor;
+        }
+
+        context.fillRect(
+          x * tileSize,
+          y * tileSize +
+            (tileSize - Math.abs((tileSize * (stage * 10)) / 100)) / 2,
+          tileSize,
+          Math.abs((tileSize * (stage * 10)) / 100),
+        );
+      }
+
+      if (stage < 10) {
+        setTimeout(() => {
+          updateDrawMap(y, stage + 1);
+        }, 10);
+      } else if (y === app.currentMap.length - 1) {
+        app.previousMap = null;
+        app.previousTerrains = null;
+      }
+    }
+
+    for (let y = 0; y < app.currentMap.length; y++) {
+      setTimeout(() => {
+        updateDrawMap(y);
+      }, 50 * y);
+    }
+  }
 }
 
-// V Com problemas V
-// function printMapCanvas(map, terrains, where, sizeMap, sizeTile) {  //sizeMap -> dimensção do mapa; sizeTile -> tamanho de cada quadrado
-//   var canvas = where;
-//   var ctx = canvas.getContext("2d");
+function init() {
+  canvas.width = 42 * tileSize;
+  canvas.height = 42 * tileSize;
+  context.lineWidth = 0.25;
+  context.strokeStyle = "#000000";
 
-//   for (var y = 0; j < sizeMap; j++) {
-//     for (var x = 0; x < sizeMap; x++) {
-//       ctx.fillStyle = terrains.get(map[x][y]).color;
-//       ctx.fillRect(x*sizeTile, y*sizeTile, sizeTile, sizeTile);
-//     }
-//   }
+  app.currentMap = hyruleMap;
+  app.currentTerrains = hyruleTerrains;
+  app.previousMap = null;
+  app.previousTerrains = null;
 
-// }
+  drawMap();
+}
 
-printMap(
-  hyruleMap,
-  hyruleTerrains,
-  window.document.getElementById("hyruleMap"),
-);
-
-printMap(
-  powerDungeonMap,
-  dungeonTerrains,
-  window.document.getElementById("powerDungeonMap"),
-);
-
-printMap(
-  courageDungeonMap,
-  dungeonTerrains,
-  window.document.getElementById("courageDungeonMap"),
-);
-
-printMap(
-  wisdomDungeonMap,
-  dungeonTerrains,
-  window.document.getElementById("wisdomDungeonMap"),
-);
-
-// V Com problemas V
-// printMapCanvas(
-//   hyruleMap,
-//   hyruleTerrains,
-//   window.document.getElementById("hyruleMapCanvas"),
-//   42,
-//   11,
-// );
+init();
