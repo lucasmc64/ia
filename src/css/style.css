@@ -1,17 +1,14 @@
-body {
+* {
   margin: 0;
   padding: 0;
   border: 0;
   box-sizing: border-box;
 }
 
-#map-test {
-  /* display: flex; */
-}
-
-.box {
-  /* flex-shrink: 0; */
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
+body {
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
