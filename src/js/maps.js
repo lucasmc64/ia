@@ -18,7 +18,7 @@ const biggestSize = [
   ]),
 ].reduce((previousValue, currentValue) => {
   return previousValue > currentValue ? previousValue : currentValue;
-});
+}, 0);
 
 function mapPadding(map) {
   let newMap = [...map];
