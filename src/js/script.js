@@ -15,13 +15,14 @@ import {
   powerDungeonMap,
   courageDungeonMap,
   wisdomDungeonMap,
+  biggestSize,
 } from "./maps.js";
 
 const canvas = window.document.getElementById("map");
 const context = canvas.getContext("2d");
 
 const app = new App();
-const link = new Link(25, 28);
+// const link = new Link(25, 28);
 
 function drawMap() {
   console.log("Drawing!");
@@ -31,16 +32,19 @@ function drawMap() {
       for (let x = 0; x < app.currentMap.length; x++) {
         const key = app.currentMap[y][x];
 
-        if (key !== "-") {
-          context.fillStyle = app.currentTerrains.get(key).color;
+        context.fillStyle =
+          key !== "-"
+            ? app.currentTerrains.get(key).color
+            : defaultBackgroundColor;
 
-          context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+        context.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+
+        key !== "-" &&
           context.strokeRect(x * tileSize, y * tileSize, tileSize, tileSize);
-        } else {
-          context.fillStyle = defaultBackgroundColor;
-        }
       }
     }
+
+    window.requestAnimationFrame(drawMap);
   } else {
     function updateDrawMap(y, stage = -9) {
       for (let x = 0; x < app.currentMap.length; x++) {
@@ -48,6 +52,7 @@ function drawMap() {
 
         context.clearRect(x * tileSize, y * tileSize, tileSize, tileSize);
 
+        // TODO: `fillRect` deve ser executado antes de `strokeRect`
         if (key !== "-") {
           context.fillStyle =
             stage > 0
@@ -93,8 +98,8 @@ function drawMap() {
 }
 
 function init() {
-  canvas.width = 42 * tileSize;
-  canvas.height = 42 * tileSize;
+  canvas.width = biggestSize * tileSize;
+  canvas.height = biggestSize * tileSize;
   context.lineWidth = 0.25;
   context.strokeStyle = "#000000";
 
@@ -107,3 +112,12 @@ function init() {
 }
 
 init();
+
+function teste() {
+  app.currentMap = courageDungeonMap;
+  app.currentTerrains = dungeonTerrains;
+  app.previousMap = hyruleMap;
+  app.previousTerrains = hyruleTerrains;
+}
+
+teste();

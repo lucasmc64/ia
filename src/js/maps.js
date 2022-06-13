@@ -54,4 +54,5 @@ export {
   newPowerDungeonMap as powerDungeonMap,
   newCourageDungeonMap as courageDungeonMap,
   newWisdomDungeonMap as wisdomDungeonMap,
+  biggestSize,
 };
