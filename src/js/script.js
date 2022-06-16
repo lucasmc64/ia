@@ -52,20 +52,11 @@ function drawMap() {
 
         context.clearRect(x * tileSize, y * tileSize, tileSize, tileSize);
 
-        // TODO: `fillRect` deve ser executado antes de `strokeRect`
         if (key !== "-") {
           context.fillStyle =
             stage > 0
               ? app.currentTerrains.get(key).color
               : app.previousTerrains.get(key).color;
-
-          context.strokeRect(
-            x * tileSize,
-            y * tileSize +
-              (tileSize - Math.abs((tileSize * (stage * 10)) / 100)) / 2,
-            tileSize,
-            Math.abs((tileSize * (stage * 10)) / 100),
-          );
         } else {
           context.fillStyle = defaultBackgroundColor;
         }
@@ -77,6 +68,15 @@ function drawMap() {
           tileSize,
           Math.abs((tileSize * (stage * 10)) / 100),
         );
+
+        key !== "-" &&
+          context.strokeRect(
+            x * tileSize,
+            y * tileSize +
+              (tileSize - Math.abs((tileSize * (stage * 10)) / 100)) / 2,
+            tileSize,
+            Math.abs((tileSize * (stage * 10)) / 100),
+          );
       }
 
       if (stage < 10) {
