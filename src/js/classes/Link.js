@@ -38,6 +38,10 @@ class Link {
     return this.#image;
   }
 
+  get image() {
+    return image;
+  }
+
   set hasPendantOfCourage(hasPendantOfCourage) {
     this.#hasPendantOfCourage = hasPendantOfCourage;
   }

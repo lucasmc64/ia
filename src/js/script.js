@@ -25,37 +25,57 @@ const app = new App();
 const link = new Link(24, 27);
 
 function drawSprites() {
-
   console.log("Drawing other stuff!");
   if (app.currentMap == hyruleMap) {
-
-    hyruleLocales.forEach(locale => {
-      context.drawImage(locale.image, locale.x * tileSize, locale.y * tileSize, tileSize, tileSize);
+    hyruleLocales.forEach((locale) => {
+      context.drawImage(
+        locale.image,
+        locale.x * tileSize,
+        locale.y * tileSize,
+        tileSize,
+        tileSize,
+      );
     });
-    
   } else if (app.currentMap == powerDungeonMap) {
-
-    powerDungeonLocales.forEach(locale => {
-      context.drawImage(locale.image, locale.x * tileSize, locale.y * tileSize, tileSize, tileSize);
+    powerDungeonLocales.forEach((locale) => {
+      context.drawImage(
+        locale.image,
+        locale.x * tileSize,
+        locale.y * tileSize,
+        tileSize,
+        tileSize,
+      );
     });
-
   } else if (app.currentMap == courageDungeonMap) {
-
-    courageDungeonLocales.forEach(locale => {
-      context.drawImage(locale.image, locale.x * tileSize, locale.y * tileSize, tileSize, tileSize);
+    courageDungeonLocales.forEach((locale) => {
+      context.drawImage(
+        locale.image,
+        locale.x * tileSize,
+        locale.y * tileSize,
+        tileSize,
+        tileSize,
+      );
     });
-
   } else if (app.currentMap == wisdomDungeonMap) {
-
-    wisdomDungeonLocales.forEach(locale => {
-      context.drawImage(locale.image, locale.x * tileSize, locale.y * tileSize, tileSize, tileSize);
+    wisdomDungeonLocales.forEach((locale) => {
+      context.drawImage(
+        locale.image,
+        locale.x * tileSize,
+        locale.y * tileSize,
+        tileSize,
+        tileSize,
+      );
     });
-
   }
 
   console.log("Drawing Link!");
-  context.drawImage(link.image, link.x * tileSize, link.y * tileSize, tileSize, tileSize);
-
+  context.drawImage(
+    link.image,
+    link.x * tileSize,
+    link.y * tileSize,
+    tileSize,
+    tileSize,
+  );
 }
 
 function drawMap() {
@@ -130,23 +150,31 @@ function drawMap() {
         updateDrawMap(y);
       }, 50 * y);
     }
-
   }
 }
 
 function checkPosition() {
   if (app.currentMap == hyruleMap) {
-    if (link.x == hyruleLocales.get("powerDungeon").x && link.y == hyruleLocales.get("powerDungeon").y) {
+    if (
+      link.x == hyruleLocales.get("powerDungeon").x &&
+      link.y == hyruleLocales.get("powerDungeon").y
+    ) {
       app.currentMap = powerDungeonMap;
       app.currentTerrains = dungeonTerrains;
       app.previousMap = hyruleMap;
       app.previousTerrains = hyruleTerrains;
-    } else if (link.x == hyruleLocales.get("courageDungeon").x && link.y == hyruleLocales.get("courageDungeon").y) {
+    } else if (
+      link.x == hyruleLocales.get("courageDungeon").x &&
+      link.y == hyruleLocales.get("courageDungeon").y
+    ) {
       app.currentMap = courageDungeonMap;
       app.currentTerrains = dungeonTerrains;
       app.previousMap = hyruleMap;
       app.previousTerrains = hyruleTerrains;
-    } else if (link.x == hyruleLocales.get("wisdomDungeon").x && link.y == hyruleLocales.get("wisdomDungeon").y) {
+    } else if (
+      link.x == hyruleLocales.get("wisdomDungeon").x &&
+      link.y == hyruleLocales.get("wisdomDungeon").y
+    ) {
       app.currentMap = wisdomDungeonMap;
       app.currentTerrains = dungeonTerrains;
       app.previousMap = hyruleMap;
@@ -174,11 +202,11 @@ function andaWisdom() {
 }
 
 const button1 = window.document.getElementById("button1");
-button1.addEventListener("click",andaPower);
+button1.addEventListener("click", andaPower);
 const button2 = window.document.getElementById("button2");
-button2.addEventListener("click",andaCourage);
+button2.addEventListener("click", andaCourage);
 const button3 = window.document.getElementById("button3");
-button3.addEventListener("click",andaWisdom);
+button3.addEventListener("click", andaWisdom);
 
 function init() {
   canvas.width = biggestSize * tileSize;
@@ -192,6 +220,7 @@ function init() {
   app.previousTerrains = null;
 
   drawMap();
+  // drawLink(link);
 }
 
 init();
