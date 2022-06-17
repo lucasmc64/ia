@@ -25,3 +25,4 @@
 - [ ] Link deve estar sempre ciente de sua posição inicial
 - [ ] Fantasminha do Link executando o algoritmo A\* (depois o link mesmo vai percorrer o melhor caminho).
 - [ ] Verificar comparações em `drawSprite`
+- [ ] Refatorar para aglomerar `terrains` e `locales` em seus devidos "mapas"
