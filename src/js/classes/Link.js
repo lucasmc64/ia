@@ -10,7 +10,8 @@ class Link {
   constructor(x = 0, y = 0) {
     this.#x = x;
     this.#y = y;
-    this.#image = "src/assets/link_128px.png";
+    this.#image = new Image();
+    this.#image = "assets/link_128px.png";
 
     this.#hasPendantOfCourage = false;
     this.#hasPendantOfPower = false;
@@ -22,7 +23,7 @@ class Link {
   }
 
   get x() {
-    return x;
+    return this.#x;
   }
 
   set y(y) {
@@ -30,7 +31,11 @@ class Link {
   }
 
   get y() {
-    return y;
+    return this.#y;
+  }
+
+  get image() {
+    return this.#image;
   }
 
   get image() {
@@ -42,7 +47,7 @@ class Link {
   }
 
   get hasPendantOfCourage() {
-    return hasPendantOfCourage;
+    return this.#hasPendantOfCourage;
   }
 
   set hasPendantOfPower(hasPendantOfPower) {
@@ -50,7 +55,7 @@ class Link {
   }
 
   get hasPendantOfPower() {
-    return hasPendantOfPower;
+    return this.#hasPendantOfPower;
   }
 
   set hasPendantOfWisdom(hasPendantOfWisdom) {
@@ -58,7 +63,7 @@ class Link {
   }
 
   get hasPendantOfWisdom() {
-    return hasPendantOfWisdom;
+    return this.#hasPendantOfWisdom;
   }
 }
 
