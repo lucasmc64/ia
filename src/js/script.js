@@ -21,49 +21,6 @@ import {
 const canvas = window.document.getElementById("map");
 const context = canvas.getContext("2d");
 
-function mudaMapa() {
-  if (app.currentMap == hyruleMap) {
-
-    link.x = 14;
-    link.y = 26;
-    app.currentMap = powerDungeonMap;
-    app.currentTerrains = dungeonTerrains;
-    app.previousMap = hyruleMap;
-    app.previousTerrains = hyruleTerrains;
-    
-  } else if (app.currentMap == powerDungeonMap) {
-
-    link.x = 13;
-    link.y = 25;
-    app.currentMap = courageDungeonMap;
-    app.currentTerrains = dungeonTerrains;
-    app.previousMap = powerDungeonMap;
-    app.previousTerrains = dungeonTerrains;
-
-  } else if (app.currentMap == courageDungeonMap) {
-
-    link.x = 14;
-    link.y = 25;
-    app.currentMap = wisdomDungeonMap;
-    app.currentTerrains = dungeonTerrains;
-    app.previousMap = courageDungeonMap;
-    app.previousTerrains = dungeonTerrains;
-
-  } else if (app.currentMap == wisdomDungeonMap) {
-
-    link.x = 24;
-    link.y = 27;
-    app.currentMap = hyruleMap;
-    app.currentTerrains = hyruleTerrains;
-    app.previousMap = wisdomDungeonMap;
-    app.previousTerrains = dungeonTerrains;
-
-  }
-}
-
-const button = window.document.getElementById("button");
-button.addEventListener("click",mudaMapa);
-
 const app = new App();
 const link = new Link(24, 27);
 
@@ -100,8 +57,6 @@ function drawSprites() {
   context.drawImage(link.image, link.x * tileSize, link.y * tileSize, tileSize, tileSize);
 
 }
-
-
 
 function drawMap() {
   console.log("Drawing!");
@@ -178,6 +133,52 @@ function drawMap() {
 
   }
 }
+
+function checkPosition() {
+  if (app.currentMap == hyruleMap) {
+    if (link.x == hyruleLocales.get("powerDungeon").x && link.y == hyruleLocales.get("powerDungeon").y) {
+      app.currentMap = powerDungeonMap;
+      app.currentTerrains = dungeonTerrains;
+      app.previousMap = hyruleMap;
+      app.previousTerrains = hyruleTerrains;
+    } else if (link.x == hyruleLocales.get("courageDungeon").x && link.y == hyruleLocales.get("courageDungeon").y) {
+      app.currentMap = courageDungeonMap;
+      app.currentTerrains = dungeonTerrains;
+      app.previousMap = hyruleMap;
+      app.previousTerrains = hyruleTerrains;
+    } else if (link.x == hyruleLocales.get("wisdomDungeon").x && link.y == hyruleLocales.get("wisdomDungeon").y) {
+      app.currentMap = wisdomDungeonMap;
+      app.currentTerrains = dungeonTerrains;
+      app.previousMap = hyruleMap;
+      app.previousTerrains = hyruleTerrains;
+    }
+  }
+}
+
+function andaPower() {
+  link.x = 5;
+  link.y = 32;
+  checkPosition();
+}
+
+function andaCourage() {
+  link.x = 39;
+  link.y = 17;
+  checkPosition();
+}
+
+function andaWisdom() {
+  link.x = 24;
+  link.y = 1;
+  checkPosition();
+}
+
+const button1 = window.document.getElementById("button1");
+button1.addEventListener("click",andaPower);
+const button2 = window.document.getElementById("button2");
+button2.addEventListener("click",andaCourage);
+const button3 = window.document.getElementById("button3");
+button3.addEventListener("click",andaWisdom);
 
 function init() {
   canvas.width = biggestSize * tileSize;
