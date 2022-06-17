@@ -20,7 +20,7 @@ class Link {
   }
 
   get x() {
-    return x;
+    return this.#x;
   }
 
   set y(y) {
@@ -28,7 +28,7 @@ class Link {
   }
 
   get y() {
-    return y;
+    return this.#y;
   }
 
   set hasPendantOfCourage(hasPendantOfCourage) {
@@ -36,7 +36,7 @@ class Link {
   }
 
   get hasPendantOfCourage() {
-    return hasPendantOfCourage;
+    return this.#hasPendantOfCourage;
   }
 
   set hasPendantOfPower(hasPendantOfPower) {
@@ -44,7 +44,7 @@ class Link {
   }
 
   get hasPendantOfPower() {
-    return hasPendantOfPower;
+    return this.#hasPendantOfPower;
   }
 
   set hasPendantOfWisdom(hasPendantOfWisdom) {
@@ -52,7 +52,7 @@ class Link {
   }
 
   get hasPendantOfWisdom() {
-    return hasPendantOfWisdom;
+    return this.#hasPendantOfWisdom;
   }
 }
 
