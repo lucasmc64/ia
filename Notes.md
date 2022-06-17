@@ -21,3 +21,4 @@
 - [ ] Criar outros mapas de exemplo
 - [ ] Revisar se faz sentido juntar a classe App e a classe Link
 - [ ] Link deve estar sempre ciente de sua posição inicial
+- [ ] Fantasminha do Link executando o algoritmo A* (depois o link mesmo vai percorrer o melhor caminho).
