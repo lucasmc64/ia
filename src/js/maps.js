@@ -21,12 +21,17 @@ const biggestSize = [
 }, 0);
 
 function mapPadding(map) {
+  // { map, padding: {x, y} }
+
   let newMap = [...map];
+  const axisCorrection = { x: 0, y: 0 };
 
   if (newMap[0].length !== biggestSize) {
+    axisCorrection.x = (biggestSize - newMap.length) / 2;
+
     newMap = newMap.map((line) =>
       line
-        .padStart(newMap[0].length + (biggestSize - newMap.length) / 2, "-")
+        .padStart(newMap[0].length + axisCorrection.x, "-")
         .padEnd(biggestSize, "-"),
     );
   }
@@ -35,24 +40,26 @@ function mapPadding(map) {
     const quantityOfNewLines = biggestSize - newMap.length;
     const newLine = "-".repeat(biggestSize);
 
+    axisCorrection.y = quantityOfNewLines / 2;
+
     for (let i = 0; i < quantityOfNewLines; i++) {
       if (i < quantityOfNewLines / 2) newMap.unshift(newLine);
       else newMap.push(newLine);
     }
   }
 
-  return newMap;
+  return { map: newMap, axisCorrection };
 }
 
-const newHyruleMap = mapPadding(hyruleMap);
-const newPowerDungeonMap = mapPadding(powerDungeonMap);
-const newCourageDungeonMap = mapPadding(courageDungeonMap);
-const newWisdomDungeonMap = mapPadding(wisdomDungeonMap);
+const newHyrule = mapPadding(hyruleMap);
+const newPowerDungeon = mapPadding(powerDungeonMap);
+const newCourageDungeon = mapPadding(courageDungeonMap);
+const newWisdomDungeon = mapPadding(wisdomDungeonMap);
 
 export {
-  newHyruleMap as hyruleMap,
-  newPowerDungeonMap as powerDungeonMap,
-  newCourageDungeonMap as courageDungeonMap,
-  newWisdomDungeonMap as wisdomDungeonMap,
+  newHyrule as hyrule,
+  newPowerDungeon as powerDungeon,
+  newCourageDungeon as courageDungeon,
+  newWisdomDungeon as wisdomDungeon,
   biggestSize,
 };

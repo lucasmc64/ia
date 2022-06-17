@@ -11,92 +11,58 @@ import {
   defaultBackgroundColor,
 } from "./consts.js";
 import {
-  hyruleMap,
-  powerDungeonMap,
-  courageDungeonMap,
-  wisdomDungeonMap,
+  hyrule,
+  powerDungeon,
+  courageDungeon,
+  wisdomDungeon,
   biggestSize,
 } from "./maps.js";
 
 const canvas = window.document.getElementById("map");
 const context = canvas.getContext("2d");
 
-function mudaMapa() {
-  if (app.currentMap == hyruleMap) {
-    link.x = 14;
-    link.y = 26;
-    app.currentMap = powerDungeonMap;
-    app.currentTerrains = dungeonTerrains;
-    app.previousMap = hyruleMap;
-    app.previousTerrains = hyruleTerrains;
-  } else if (app.currentMap == powerDungeonMap) {
-    link.x = 13;
-    link.y = 25;
-    app.currentMap = courageDungeonMap;
-    app.currentTerrains = dungeonTerrains;
-    app.previousMap = powerDungeonMap;
-    app.previousTerrains = dungeonTerrains;
-  } else if (app.currentMap == courageDungeonMap) {
-    link.x = 14;
-    link.y = 25;
-    app.currentMap = wisdomDungeonMap;
-    app.currentTerrains = dungeonTerrains;
-    app.previousMap = courageDungeonMap;
-    app.previousTerrains = dungeonTerrains;
-  } else if (app.currentMap == wisdomDungeonMap) {
-    link.x = 24;
-    link.y = 27;
-    app.currentMap = hyruleMap;
-    app.currentTerrains = hyruleTerrains;
-    app.previousMap = wisdomDungeonMap;
-    app.previousTerrains = dungeonTerrains;
-  }
-}
-
-const button = window.document.getElementById("button");
-button.addEventListener("click", mudaMapa);
-
 const app = new App();
 const link = new Link(24, 27);
 
 function drawSprites() {
   console.log("Drawing other stuff!");
-  if (app.currentMap == hyruleMap) {
+
+  if (app.currentMap.map == hyrule.map) {
     hyruleLocales.forEach((locale) => {
       context.drawImage(
         locale.image,
-        locale.x * tileSize,
-        locale.y * tileSize,
+        (locale.x + app.currentMap.axisCorrection.x) * tileSize,
+        (locale.y + app.currentMap.axisCorrection.y) * tileSize,
         tileSize,
         tileSize,
       );
     });
-  } else if (app.currentMap == powerDungeonMap) {
+  } else if (app.currentMap.map == powerDungeon.map) {
     powerDungeonLocales.forEach((locale) => {
       context.drawImage(
         locale.image,
-        locale.x * tileSize,
-        locale.y * tileSize,
+        (locale.x + app.currentMap.axisCorrection.x) * tileSize,
+        (locale.y + app.currentMap.axisCorrection.y) * tileSize,
         tileSize,
         tileSize,
       );
     });
-  } else if (app.currentMap == courageDungeonMap) {
+  } else if (app.currentMap.map == courageDungeon.map) {
     courageDungeonLocales.forEach((locale) => {
       context.drawImage(
         locale.image,
-        locale.x * tileSize,
-        locale.y * tileSize,
+        (locale.x + app.currentMap.axisCorrection.x) * tileSize,
+        (locale.y + app.currentMap.axisCorrection.y) * tileSize,
         tileSize,
         tileSize,
       );
     });
-  } else if (app.currentMap == wisdomDungeonMap) {
+  } else if (app.currentMap.map == wisdomDungeon.map) {
     wisdomDungeonLocales.forEach((locale) => {
       context.drawImage(
         locale.image,
-        locale.x * tileSize,
-        locale.y * tileSize,
+        (locale.x + app.currentMap.axisCorrection.x) * tileSize,
+        (locale.y + app.currentMap.axisCorrection.y) * tileSize,
         tileSize,
         tileSize,
       );
@@ -117,9 +83,9 @@ function drawMap() {
   console.log("Drawing!");
 
   if (!app.previousMap && !app.previousTerrains) {
-    for (let y = 0; y < app.currentMap.length; y++) {
-      for (let x = 0; x < app.currentMap.length; x++) {
-        const key = app.currentMap[y][x];
+    for (let y = 0; y < app.currentMap.map.length; y++) {
+      for (let x = 0; x < app.currentMap.map.length; x++) {
+        const key = app.currentMap.map[y][x];
 
         context.fillStyle =
           key !== "-"
@@ -138,8 +104,9 @@ function drawMap() {
     window.requestAnimationFrame(drawMap);
   } else {
     function updateDrawMap(y, stage = -9) {
-      for (let x = 0; x < app.currentMap.length; x++) {
-        const key = stage > 0 ? app.currentMap[y][x] : app.previousMap[y][x];
+      for (let x = 0; x < app.currentMap.map.length; x++) {
+        const key =
+          stage > 0 ? app.currentMap.map[y][x] : app.previousMap.map[y][x];
 
         context.clearRect(x * tileSize, y * tileSize, tileSize, tileSize);
 
@@ -174,13 +141,14 @@ function drawMap() {
         setTimeout(() => {
           updateDrawMap(y, stage + 1);
         }, 10);
-      } else if (y === app.currentMap.length - 1) {
+      } else if (y === app.currentMap.map.length - 1) {
         app.previousMap = null;
         app.previousTerrains = null;
+        drawMap();
       }
     }
 
-    for (let y = 0; y < app.currentMap.length; y++) {
+    for (let y = 0; y < app.currentMap.map.length; y++) {
       setTimeout(() => {
         updateDrawMap(y);
       }, 50 * y);
@@ -189,30 +157,30 @@ function drawMap() {
 }
 
 function checkPosition() {
-  if (app.currentMap == hyruleMap) {
+  if (app.currentMap.map == hyrule.map) {
     if (
       link.x == hyruleLocales.get("powerDungeon").x &&
       link.y == hyruleLocales.get("powerDungeon").y
     ) {
-      app.currentMap = powerDungeonMap;
+      app.currentMap = powerDungeon;
       app.currentTerrains = dungeonTerrains;
-      app.previousMap = hyruleMap;
+      app.previousMap = hyrule;
       app.previousTerrains = hyruleTerrains;
     } else if (
       link.x == hyruleLocales.get("courageDungeon").x &&
       link.y == hyruleLocales.get("courageDungeon").y
     ) {
-      app.currentMap = courageDungeonMap;
+      app.currentMap = courageDungeon;
       app.currentTerrains = dungeonTerrains;
-      app.previousMap = hyruleMap;
+      app.previousMap = hyrule;
       app.previousTerrains = hyruleTerrains;
     } else if (
       link.x == hyruleLocales.get("wisdomDungeon").x &&
       link.y == hyruleLocales.get("wisdomDungeon").y
     ) {
-      app.currentMap = wisdomDungeonMap;
+      app.currentMap = wisdomDungeon;
       app.currentTerrains = dungeonTerrains;
-      app.previousMap = hyruleMap;
+      app.previousMap = hyrule;
       app.previousTerrains = hyruleTerrains;
     }
   }
@@ -249,7 +217,7 @@ function init() {
   context.lineWidth = 0.25;
   context.strokeStyle = "#000000";
 
-  app.currentMap = hyruleMap;
+  app.currentMap = hyrule;
   app.currentTerrains = hyruleTerrains;
   app.previousMap = null;
   app.previousTerrains = null;
@@ -260,9 +228,9 @@ function init() {
 init();
 
 // function teste() {
-//   app.currentMap = courageDungeonMap;
+//   app.currentMap = courageDungeon.map;
 //   app.currentTerrains = dungeonTerrains;
-//   app.previousMap = hyruleMap;
+//   app.previousMap = hyrule.map;
 //   app.previousTerrains = hyruleTerrains;
 // }
 
