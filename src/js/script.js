@@ -40,6 +40,8 @@ function drawSprites() {
   console.log("Drawing other stuff!");
   if (app.currentMap == hyruleMap) {
 
+    
+
   } else if (app.currentMap == powerDungeonMap) {
 
   } else if (app.currentMap == courageDungeonMap) {
