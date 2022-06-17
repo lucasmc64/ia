@@ -24,12 +24,12 @@ const pendantOfPowerImage = new Image();
 const pendantOfCourageImage = new Image();
 const pendantOfWisdomImage = new Image();
 
-dungeonDoorImage.src = "";
-lostWoodsDoorImage.src = "";
-masterSwordImage.src = "";
-pendantOfPowerImage.src = "";
-pendantOfCourageImage.src = "";
-pendantOfWisdomImage.src = "";
+dungeonDoorImage.src = "assets/dungeon_door_128px.png";
+lostWoodsDoorImage.src = "assets/locked_door_128px.png";
+masterSwordImage.src = "assets/sword_128px.png";
+pendantOfPowerImage.src = "assets/power_128px.png";
+pendantOfCourageImage.src = "assets/courage_128px.png";
+pendantOfWisdomImage.src = "assets/wisdom_128px.png";
 
 //\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
 // Locales
