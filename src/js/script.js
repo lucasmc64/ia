@@ -22,7 +22,34 @@ const canvas = window.document.getElementById("map");
 const context = canvas.getContext("2d");
 
 const app = new App();
-// const link = new Link(25, 28);
+const link = new Link(24, 27);
+
+function drawSprites() {
+
+  console.log("Drawing Link!");
+  // const x = link.x;
+  // const y = link.y;
+  const x = 24;
+  const y = 27;
+  const linkSprite = new Image();
+  // linkSprite.src = link.image;
+  linkSprite.src = "assets/link_128px.png";
+  context.drawImage(linkSprite, x * tileSize, y * tileSize, tileSize, tileSize);
+  // context.drawImage(linkSprite, 0, 0);
+
+  console.log("Drawing other stuff!");
+  if (app.currentMap == hyruleMap) {
+
+  } else if (app.currentMap == powerDungeonMap) {
+
+  } else if (app.currentMap == courageDungeonMap) {
+
+  } else if (app.currentMap == wisdomDungeonMap) {
+
+  }
+}
+
+
 
 function drawMap() {
   console.log("Drawing!");
@@ -43,6 +70,8 @@ function drawMap() {
           context.strokeRect(x * tileSize, y * tileSize, tileSize, tileSize);
       }
     }
+
+    drawSprites();
 
     window.requestAnimationFrame(drawMap);
   } else {
@@ -109,15 +138,16 @@ function init() {
   app.previousTerrains = null;
 
   drawMap();
+  // drawLink(link);
 }
 
 init();
 
-function teste() {
-  app.currentMap = courageDungeonMap;
-  app.currentTerrains = dungeonTerrains;
-  app.previousMap = hyruleMap;
-  app.previousTerrains = hyruleTerrains;
-}
+// function teste() {
+//   app.currentMap = courageDungeonMap;
+//   app.currentTerrains = dungeonTerrains;
+//   app.previousMap = hyruleMap;
+//   app.previousTerrains = hyruleTerrains;
+// }
 
-teste();
+// teste();
