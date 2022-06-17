@@ -21,6 +21,41 @@ import {
 const canvas = window.document.getElementById("map");
 const context = canvas.getContext("2d");
 
+function mudaMapa() {
+  if (app.currentMap == hyruleMap) {
+    link.x = 14;
+    link.y = 26;
+    app.currentMap = powerDungeonMap;
+    app.currentTerrains = dungeonTerrains;
+    app.previousMap = hyruleMap;
+    app.previousTerrains = hyruleTerrains;
+  } else if (app.currentMap == powerDungeonMap) {
+    link.x = 13;
+    link.y = 25;
+    app.currentMap = courageDungeonMap;
+    app.currentTerrains = dungeonTerrains;
+    app.previousMap = powerDungeonMap;
+    app.previousTerrains = dungeonTerrains;
+  } else if (app.currentMap == courageDungeonMap) {
+    link.x = 14;
+    link.y = 25;
+    app.currentMap = wisdomDungeonMap;
+    app.currentTerrains = dungeonTerrains;
+    app.previousMap = courageDungeonMap;
+    app.previousTerrains = dungeonTerrains;
+  } else if (app.currentMap == wisdomDungeonMap) {
+    link.x = 24;
+    link.y = 27;
+    app.currentMap = hyruleMap;
+    app.currentTerrains = hyruleTerrains;
+    app.previousMap = wisdomDungeonMap;
+    app.previousTerrains = dungeonTerrains;
+  }
+}
+
+const button = window.document.getElementById("button");
+button.addEventListener("click", mudaMapa);
+
 const app = new App();
 const link = new Link(24, 27);
 
@@ -220,7 +255,6 @@ function init() {
   app.previousTerrains = null;
 
   drawMap();
-  // drawLink(link);
 }
 
 init();
