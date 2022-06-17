@@ -8,7 +8,7 @@
 - [ ] Tavares ..| 02. Definir função de heurística
 - [ ] 3. Definir visualmente como será a movimentação do Link
 - [ ] 4. Troca de mapa
-  - [x] Mattos ...| 04.1 Gatilhos
+  - [x] Mattos ...| 04.1 Gatilhos (usar Observer pattern)
   - [ ] Coutinho .| 04.2 Mexer na animação para delay na movimentação do Link durante a troca de mapas
 - [ ] 5. Resolver problema do caixeiro viajante
 - [ ] 6. Efeito de Link pegando o pingente?
