@@ -264,6 +264,7 @@ function checkPosition() {
   }
 }
 
+// função de teste
 function andaPower() {
   if (app.currentMap == hyrule) {
     link.x = hyruleLocales.get("powerDungeon").x;
@@ -271,7 +272,7 @@ function andaPower() {
     checkPosition();
   }
 }
-
+// função de teste
 function andaCourage() {
   if (app.currentMap == hyrule) {
     link.x = hyruleLocales.get("courageDungeon").x;
@@ -279,7 +280,7 @@ function andaCourage() {
     checkPosition();
   }
 }
-
+// função de teste
 function andaWisdom() {
   if (app.currentMap == hyrule) {
     link.x = hyruleLocales.get("wisdomDungeon").x;
@@ -287,7 +288,7 @@ function andaWisdom() {
     checkPosition();
   }
 }
-
+// função de teste
 function andaHyrule() {
   if (app.currentMap == powerDungeon) {
     link.x = powerDungeonLocales.get("exit").x;
@@ -303,7 +304,7 @@ function andaHyrule() {
     checkPosition();
   }
 }
-
+// função de teste
 function pegaPoder() {
   if (app.currentMap == powerDungeon) {
     link.x = powerDungeonLocales.get("pendantOfPower").x;
@@ -311,6 +312,7 @@ function pegaPoder() {
     checkPosition();
   }
 }
+// função de teste
 function pegaCoragem() {
   if (app.currentMap == courageDungeon) {
     link.x = courageDungeonLocales.get("pendantOfCourage").x;
@@ -318,6 +320,7 @@ function pegaCoragem() {
     checkPosition();
   }
 }
+// função de teste
 function pegaSabedoria() {
   if (app.currentMap == wisdomDungeon) {
     link.x = wisdomDungeonLocales.get("pendantOfWisdom").x;
@@ -325,7 +328,7 @@ function pegaSabedoria() {
     checkPosition();
   }
 }
-
+// botões de teste
 const button1 = window.document.getElementById("button1");
 button1.addEventListener("click", andaPower);
 const button2 = window.document.getElementById("button2");
