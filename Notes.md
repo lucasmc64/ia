@@ -7,7 +7,7 @@
 - [x] Mattos ...| 01. Desenhar os portais, Link e pingentes
 - [ ] Tavares ..| 02. Definir função de heurística
 - [ ] 3.  Definir visualmente como será a movimentação do Link
-- [ ] Mattos ...| 04. Definir eventos para troca de mapa
+- [x] Mattos ...| 04. Definir eventos para troca de mapa
   - [ ] 04.1. Usar Observer pattern
 - [ ] 5.  Resolver problema do caixeiro viajante
 - [ ] 6.  Efeito de Link pegando o pingente?
