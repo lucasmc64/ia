@@ -21,34 +21,84 @@ import {
 const canvas = window.document.getElementById("map");
 const context = canvas.getContext("2d");
 
+function mudaMapa() {
+  if (app.currentMap == hyruleMap) {
+
+    link.x = 14;
+    link.y = 26;
+    app.currentMap = powerDungeonMap;
+    app.currentTerrains = dungeonTerrains;
+    app.previousMap = hyruleMap;
+    app.previousTerrains = hyruleTerrains;
+    
+  } else if (app.currentMap == powerDungeonMap) {
+
+    link.x = 13;
+    link.y = 25;
+    app.currentMap = courageDungeonMap;
+    app.currentTerrains = dungeonTerrains;
+    app.previousMap = powerDungeonMap;
+    app.previousTerrains = dungeonTerrains;
+
+  } else if (app.currentMap == courageDungeonMap) {
+
+    link.x = 14;
+    link.y = 25;
+    app.currentMap = wisdomDungeonMap;
+    app.currentTerrains = dungeonTerrains;
+    app.previousMap = courageDungeonMap;
+    app.previousTerrains = dungeonTerrains;
+
+  } else if (app.currentMap == wisdomDungeonMap) {
+
+    link.x = 24;
+    link.y = 27;
+    app.currentMap = hyruleMap;
+    app.currentTerrains = hyruleTerrains;
+    app.previousMap = wisdomDungeonMap;
+    app.previousTerrains = dungeonTerrains;
+
+  }
+}
+
+const button = window.document.getElementById("button");
+button.addEventListener("click",mudaMapa);
+
 const app = new App();
 const link = new Link(24, 27);
 
 function drawSprites() {
 
-  console.log("Drawing Link!");
-  // const x = link.x;
-  // const y = link.y;
-  const x = 24;
-  const y = 27;
-  const linkSprite = new Image();
-  // linkSprite.src = link.image;
-  linkSprite.src = "assets/link_128px.png";
-  context.drawImage(linkSprite, x * tileSize, y * tileSize, tileSize, tileSize);
-  // context.drawImage(linkSprite, 0, 0);
-
   console.log("Drawing other stuff!");
   if (app.currentMap == hyruleMap) {
 
+    hyruleLocales.forEach(locale => {
+      context.drawImage(locale.image, locale.x * tileSize, locale.y * tileSize, tileSize, tileSize);
+    });
     
-
   } else if (app.currentMap == powerDungeonMap) {
+
+    powerDungeonLocales.forEach(locale => {
+      context.drawImage(locale.image, locale.x * tileSize, locale.y * tileSize, tileSize, tileSize);
+    });
 
   } else if (app.currentMap == courageDungeonMap) {
 
+    courageDungeonLocales.forEach(locale => {
+      context.drawImage(locale.image, locale.x * tileSize, locale.y * tileSize, tileSize, tileSize);
+    });
+
   } else if (app.currentMap == wisdomDungeonMap) {
 
+    wisdomDungeonLocales.forEach(locale => {
+      context.drawImage(locale.image, locale.x * tileSize, locale.y * tileSize, tileSize, tileSize);
+    });
+
   }
+
+  console.log("Drawing Link!");
+  context.drawImage(link.image, link.x * tileSize, link.y * tileSize, tileSize, tileSize);
+
 }
 
 
@@ -125,6 +175,7 @@ function drawMap() {
         updateDrawMap(y);
       }, 50 * y);
     }
+
   }
 }
 
@@ -140,7 +191,6 @@ function init() {
   app.previousTerrains = null;
 
   drawMap();
-  // drawLink(link);
 }
 
 init();

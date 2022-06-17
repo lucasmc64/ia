@@ -201,7 +201,7 @@ const wisdomDungeonMap = [
 //\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
 // Other consts
 
-const tileSize = 15;
+const tileSize = 20;
 const defaultBackgroundColor = "#ffffff";
 
 //\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\

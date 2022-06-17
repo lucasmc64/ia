@@ -11,7 +11,7 @@ class Link {
     this.#x = x;
     this.#y = y;
     this.#image = new Image();
-    this.#image = "assets/link_128px.png";
+    this.#image.src = "assets/link_128px.png";
 
     this.#hasPendantOfCourage = false;
     this.#hasPendantOfPower = false;
@@ -36,10 +36,6 @@ class Link {
 
   get image() {
     return this.#image;
-  }
-
-  get image() {
-    return image;
   }
 
   set hasPendantOfCourage(hasPendantOfCourage) {
