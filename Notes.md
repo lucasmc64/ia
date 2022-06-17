@@ -4,10 +4,11 @@
 
 ### Pra ontem
 
-- [ ] Coutinho | 1. Desenhar os portais, Link e pingentes
-- [ ] Tavares | 2. Definir função de heurística
+- [ ] Coutinho .| 1. Desenhar os portais, Link e pingentes
+- [ ] Tavares ..| 2. Definir função de heurística
 - [ ] 3. Definir visualmente como será a movimentação do Link
-- [ ] Mattos | 4. Definir eventos para troca de mapa
+- [ ] Mattos ...| 4. Definir eventos para troca de mapa
+  - [ ] 4.1. Usar Observer pattern
 - [ ] 5. Resolver problema do caixeiro viajante
 - [ ] 6. Efeito de Link pegando o pingente?
 - [ ] 7. Certificar de que o Link volte posição inicial
@@ -21,4 +22,4 @@
 - [ ] Criar outros mapas de exemplo
 - [ ] Revisar se faz sentido juntar a classe App e a classe Link
 - [ ] Link deve estar sempre ciente de sua posição inicial
-- [ ] Fantasminha do Link executando o algoritmo A* (depois o link mesmo vai percorrer o melhor caminho).
+- [ ] Fantasminha do Link executando o algoritmo A\* (depois o link mesmo vai percorrer o melhor caminho).
