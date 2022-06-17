@@ -1,6 +1,7 @@
 class Link {
   #x;
   #y;
+  #image;
 
   #hasPendantOfCourage;
   #hasPendantOfPower;
@@ -9,6 +10,8 @@ class Link {
   constructor(x = 0, y = 0) {
     this.#x = x;
     this.#y = y;
+    this.#image = new Image();
+    this.#image.src = "assets/link_128px.png";
 
     this.#hasPendantOfCourage = false;
     this.#hasPendantOfPower = false;
@@ -29,6 +32,10 @@ class Link {
 
   get y() {
     return this.#y;
+  }
+
+  get image() {
+    return this.#image;
   }
 
   set hasPendantOfCourage(hasPendantOfCourage) {
