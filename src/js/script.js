@@ -24,6 +24,15 @@ const context = canvas.getContext("2d");
 const app = new App();
 const link = new Link(24, 27);
 
+function openLostWoods() {
+  if (
+    link.hasPendantOfCourage &&
+    link.hasPendantOfPower &&
+    link.hasPendantOfWisdom) {
+      hyruleLocales.get("lostWoods").image.src = "assets/open_door_128px.png";
+  }
+}
+
 function drawSprites() {
   console.log("Drawing other stuff!");
 
@@ -72,8 +81,8 @@ function drawSprites() {
   console.log("Drawing Link!");
   context.drawImage(
     link.image,
-    link.x * tileSize,
-    link.y * tileSize,
+    (link.x + app.currentMap.axisCorrection.x) * tileSize,
+    (link.y + app.currentMap.axisCorrection.y) * tileSize,
     tileSize,
     tileSize,
   );
@@ -160,48 +169,161 @@ function checkPosition() {
   if (app.currentMap.map == hyrule.map) {
     if (
       link.x == hyruleLocales.get("powerDungeon").x &&
-      link.y == hyruleLocales.get("powerDungeon").y
+      link.y == hyruleLocales.get("powerDungeon").y &&
+      !link.hasPendantOfPower
     ) {
       app.currentMap = powerDungeon;
       app.currentTerrains = dungeonTerrains;
       app.previousMap = hyrule;
       app.previousTerrains = hyruleTerrains;
+      link.x = powerDungeonLocales.get("exit").x;
+      link.y = powerDungeonLocales.get("exit").y;
     } else if (
       link.x == hyruleLocales.get("courageDungeon").x &&
-      link.y == hyruleLocales.get("courageDungeon").y
+      link.y == hyruleLocales.get("courageDungeon").y &&
+      !link.hasPendantOfCourage
     ) {
       app.currentMap = courageDungeon;
       app.currentTerrains = dungeonTerrains;
       app.previousMap = hyrule;
       app.previousTerrains = hyruleTerrains;
+      link.x = courageDungeonLocales.get("exit").x;
+      link.y = courageDungeonLocales.get("exit").y;
     } else if (
       link.x == hyruleLocales.get("wisdomDungeon").x &&
-      link.y == hyruleLocales.get("wisdomDungeon").y
+      link.y == hyruleLocales.get("wisdomDungeon").y &&
+      !link.hasPendantOfWisdom
     ) {
       app.currentMap = wisdomDungeon;
       app.currentTerrains = dungeonTerrains;
       app.previousMap = hyrule;
       app.previousTerrains = hyruleTerrains;
+      link.x = wisdomDungeonLocales.get("exit").x;
+      link.y = wisdomDungeonLocales.get("exit").y;
+    }
+  }
+
+  if (app.currentMap == powerDungeon) {
+    if (
+      link.x == powerDungeonLocales.get("exit").x &&
+      link.y == powerDungeonLocales.get("exit").y &&
+      link.hasPendantOfPower) {
+        app.currentMap = hyrule;
+        app.currentTerrains = hyruleTerrains;
+        app.previousMap = powerDungeon;
+        app.previousTerrains = dungeonTerrains;
+        link.x = hyruleLocales.get("powerDungeon").x;
+        link.y = hyruleLocales.get("powerDungeon").y;
+    } else if (
+      link.x == powerDungeonLocales.get("pendantOfPower").x &&
+      link.y == powerDungeonLocales.get("pendantOfPower").y
+    ) {
+      link.hasPendantOfPower = true;
+      openLostWoods();
+    }
+  }
+
+  if (app.currentMap == courageDungeon) {
+    if (
+      link.x == courageDungeonLocales.get("exit").x &&
+      link.y == courageDungeonLocales.get("exit").y &&
+      link.hasPendantOfCourage) {
+        app.currentMap = hyrule;
+        app.currentTerrains = hyruleTerrains;
+        app.previousMap = courageDungeon;
+        app.previousTerrains = dungeonTerrains;
+        link.x = hyruleLocales.get("courageDungeon").x;
+        link.y = hyruleLocales.get("courageDungeon").y;
+    } else if (
+      link.x == courageDungeonLocales.get("pendantOfCourage").x &&
+      link.y == courageDungeonLocales.get("pendantOfCourage").y
+    ) {
+      link.hasPendantOfCourage = true;
+      openLostWoods();
+    }
+  }
+
+  if (app.currentMap == wisdomDungeon) {
+    if (
+      link.x == wisdomDungeonLocales.get("exit").x &&
+      link.y == wisdomDungeonLocales.get("exit").y &&
+      link.hasPendantOfWisdom) {
+        app.currentMap = hyrule;
+        app.currentTerrains = hyruleTerrains;
+        app.previousMap = wisdomDungeon;
+        app.previousTerrains = dungeonTerrains;
+        link.x = hyruleLocales.get("wisdomDungeon").x;
+        link.y = hyruleLocales.get("wisdomDungeon").y;
+    } else if (
+      link.x == wisdomDungeonLocales.get("pendantOfWisdom").x &&
+      link.y == wisdomDungeonLocales.get("pendantOfWisdom").y
+    ) {
+      link.hasPendantOfWisdom = true;
+      openLostWoods();
     }
   }
 }
 
 function andaPower() {
-  link.x = 5;
-  link.y = 32;
-  checkPosition();
+  if (app.currentMap == hyrule) {
+    link.x = hyruleLocales.get("powerDungeon").x;
+    link.y = hyruleLocales.get("powerDungeon").y;
+    checkPosition();
+  }
 }
 
 function andaCourage() {
-  link.x = 39;
-  link.y = 17;
-  checkPosition();
+  if (app.currentMap == hyrule) {
+    link.x = hyruleLocales.get("courageDungeon").x;
+    link.y = hyruleLocales.get("courageDungeon").y;
+    checkPosition();
+  }
 }
 
 function andaWisdom() {
-  link.x = 24;
-  link.y = 1;
-  checkPosition();
+  if (app.currentMap == hyrule) {
+    link.x = hyruleLocales.get("wisdomDungeon").x;
+    link.y = hyruleLocales.get("wisdomDungeon").y;
+    checkPosition();
+  }
+}
+
+function andaHyrule() {
+  if (app.currentMap == powerDungeon) {
+    link.x = powerDungeonLocales.get("exit").x;
+    link.y = powerDungeonLocales.get("exit").y;
+    checkPosition();
+  } else if (app.currentMap == courageDungeon) {
+    link.x = courageDungeonLocales.get("exit").x;
+    link.y = courageDungeonLocales.get("exit").y;
+    checkPosition();
+  } else if (app.currentMap == wisdomDungeon) {
+    link.x = wisdomDungeonLocales.get("exit").x;
+    link.y = wisdomDungeonLocales.get("exit").y;
+    checkPosition();
+  }
+}
+
+function pegaPoder() {
+  if (app.currentMap == powerDungeon) {
+    link.x = powerDungeonLocales.get("pendantOfPower").x;
+    link.y = powerDungeonLocales.get("pendantOfPower").y;
+    checkPosition();
+  }
+}
+function pegaCoragem() {
+  if (app.currentMap == courageDungeon) {
+    link.x = courageDungeonLocales.get("pendantOfCourage").x;
+    link.y = courageDungeonLocales.get("pendantOfCourage").y;
+    checkPosition();
+  }
+}
+function pegaSabedoria() {
+  if (app.currentMap == wisdomDungeon) {
+    link.x = wisdomDungeonLocales.get("pendantOfWisdom").x;
+    link.y = wisdomDungeonLocales.get("pendantOfWisdom").y;
+    checkPosition();
+  }
 }
 
 const button1 = window.document.getElementById("button1");
@@ -210,6 +332,14 @@ const button2 = window.document.getElementById("button2");
 button2.addEventListener("click", andaCourage);
 const button3 = window.document.getElementById("button3");
 button3.addEventListener("click", andaWisdom);
+const button4 = window.document.getElementById("button4");
+button4.addEventListener("click", andaHyrule);
+const button5 = window.document.getElementById("button5");
+button5.addEventListener("click", pegaPoder);
+const button6 = window.document.getElementById("button6");
+button6.addEventListener("click", pegaCoragem);
+const button7 = window.document.getElementById("button7");
+button7.addEventListener("click", pegaSabedoria);
 
 function init() {
   canvas.width = biggestSize * tileSize;
