@@ -12,3 +12,260 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+#play {
+  width: 10rem;
+  height: 10rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0px 0px 16px -8px rgba(0, 0, 0, 0.5);
+  transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+}
+
+#play::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(0deg, transparent 50%, rgba(36, 11, 138, 0.5)),
+    linear-gradient(120deg, transparent 50%, rgba(173, 21, 10, 0.5)),
+    linear-gradient(240deg, transparent 50%, rgba(30, 111, 80, 0.5)), white;
+  animation-name: rotatePlayButton;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: 12s;
+}
+
+#play:hover {
+  box-shadow: 0px 8px 16px -8px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, calc(-50% - 8px));
+}
+
+#play[data-hide="true"] {
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out,
+    box-shadow 0.5s ease-in-out, visibility 0s 0.5s;
+  opacity: 0;
+  visibility: hidden;
+}
+
+#playIcon {
+  height: 75%;
+  width: 50%;
+  position: absolute;
+  background-color: white;
+  animation: animatePlayIcon;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: 12s;
+}
+
+@keyframes rotatePlayButton {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes animatePlayIcon {
+  0%,
+  100% {
+    top: 12.5%;
+    left: 25%;
+    clip-path: polygon(
+      8.5% 52.5%,
+      8.5% 47.5%,
+      14% 47.5%,
+      14% 42.5%,
+      21% 42.5%,
+      21% 37.5%,
+      28% 37.5%,
+      28% 32.5%,
+      35% 32.5%,
+      35% 27.5%,
+      42% 27.5%,
+      42% 22.5%,
+      49% 22.5%,
+      49% 17.5%,
+      56% 17.5%,
+      56% 12.5%,
+      63% 12.5%,
+      63% 7.5%,
+      70% 7.5%,
+      70% 2.5%,
+      77% 2.5%,
+      77% 97.5%,
+      70% 97.5%,
+      70% 92.5%,
+      63% 92.5%,
+      63% 87.5%,
+      56% 87.5%,
+      56% 82.5%,
+      49% 82.5%,
+      49% 77.5%,
+      42% 77.5%,
+      42% 72.5%,
+      35% 72.5%,
+      35% 67.5%,
+      28% 67.5%,
+      28% 62.5%,
+      21% 62.5%,
+      21% 57.5%,
+      14% 57.5%,
+      14% 52.5%,
+      8.5% 52.5%
+    );
+  }
+
+  25% {
+    top: 2.5%;
+    left: 22.5%;
+    clip-path: polygon(
+      8.5% 52.5%,
+      8.5% calc(47.5% + 1px),
+      14% calc(47.5% + 1px),
+      14% calc(42.5% + 2px),
+      21% calc(42.5% + 2px),
+      21% calc(37.5% + 3px),
+      28% calc(37.5% + 3px),
+      28% calc(32.5% + 4px),
+      35% calc(32.5% + 4px),
+      35% calc(27.5% + 5px),
+      42% calc(27.5% + 5px),
+      42% calc(22.5% + 6px),
+      49% calc(22.5% + 6px),
+      49% calc(17.5% + 7px),
+      56% calc(17.5% + 7px),
+      56% calc(12.5% + 8px),
+      63% calc(12.5% + 8px),
+      63% calc(7.5% + 9px),
+      70% calc(7.5% + 9px),
+      70% calc(2.5% + 10px),
+      77% calc(2.5% + 10px),
+      77% 97.5%,
+      70% 97.5%,
+      70% 92.5%,
+      63% 92.5%,
+      63% 87.5%,
+      56% 87.5%,
+      56% 82.5%,
+      49% 82.5%,
+      49% 77.5%,
+      42% 77.5%,
+      42% 72.5%,
+      35% 72.5%,
+      35% 67.5%,
+      28% 67.5%,
+      28% 62.5%,
+      21% 62.5%,
+      21% 57.5%,
+      14% 57.5%,
+      14% 52.5%,
+      8.5% 52.5%
+    );
+  }
+
+  50% {
+    left: 27.5%;
+    clip-path: polygon(
+      8.5% 52.5%,
+      8.5% 47.5%,
+      14% 47.5%,
+      14% 42.5%,
+      21% 42.5%,
+      21% 37.5%,
+      28% 37.5%,
+      28% 32.5%,
+      35% 32.5%,
+      35% 27.5%,
+      42% 27.5%,
+      42% 22.5%,
+      49% 22.5%,
+      49% 17.5%,
+      56% 17.5%,
+      56% 12.5%,
+      63% 12.5%,
+      63% 7.5%,
+      70% 7.5%,
+      70% 2.5%,
+      77% 2.5%,
+      77% 97.5%,
+      70% 97.5%,
+      70% 92.5%,
+      63% 92.5%,
+      63% 87.5%,
+      56% 87.5%,
+      56% 82.5%,
+      49% 82.5%,
+      49% 77.5%,
+      42% 77.5%,
+      42% 72.5%,
+      35% 72.5%,
+      35% 67.5%,
+      28% 67.5%,
+      28% 62.5%,
+      21% 62.5%,
+      21% 57.5%,
+      14% 57.5%,
+      14% 52.5%,
+      8.5% 52.5%
+    );
+  }
+
+  75% {
+    top: 18.75%;
+    left: 22.5%;
+    clip-path: polygon(
+      8.5% 52.5%,
+      8.5% 47.5%,
+      14% 47.5%,
+      14% 42.5%,
+      21% 42.5%,
+      21% 37.5%,
+      28% 37.5%,
+      28% 32.5%,
+      35% 32.5%,
+      35% 27.5%,
+      42% 27.5%,
+      42% 22.5%,
+      49% 22.5%,
+      49% 17.5%,
+      56% 17.5%,
+      56% 12.5%,
+      63% 12.5%,
+      63% 7.5%,
+      70% 7.5%,
+      70% 2.5%,
+      77% 2.5%,
+      77% calc(97.5% - 10px),
+      70% calc(97.5% - 10px),
+      70% calc(92.5% - 9px),
+      63% calc(92.5% - 9px),
+      63% calc(87.5% - 8px),
+      56% calc(87.5% - 8px),
+      56% calc(82.5% - 7px),
+      49% calc(82.5% - 7px),
+      49% calc(77.5% - 6px),
+      42% calc(77.5% - 6px),
+      42% calc(72.5% - 5px),
+      35% calc(72.5% - 5px),
+      35% calc(67.5% - 4px),
+      28% calc(67.5% - 4px),
+      28% calc(62.5% - 3px),
+      21% calc(62.5% - 3px),
+      21% calc(57.5% - 2px),
+      14% calc(57.5% - 2px),
+      14% calc(52.5% - 1px),
+      8.5% calc(52.5% - 1px)
+    );
+  }
+}
