@@ -1,5 +1,5 @@
-//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
-// Terrains
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Terrenos
 
 const hyruleTerrains = new Map([
   ["g", { cost: 10, label: "Grama", color: "#92d050" }],
@@ -14,8 +14,12 @@ const dungeonTerrains = new Map([
   ["w", { cost: null, label: "Parede", color: "#b7b7b7" }],
 ]);
 
-//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
-// Images
+const limboTerrains = new Map([
+  ["n", { cost: null, label: "Limbo", color: "#ffffff" }],
+]);
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Imagens
 
 const dungeonDoorImage = new Image();
 const lostWoodsDoorImage = new Image();
@@ -31,8 +35,8 @@ pendantOfPowerImage.src = "assets/power_128px.png";
 pendantOfCourageImage.src = "assets/courage_128px.png";
 pendantOfWisdomImage.src = "assets/wisdom_128px.png";
 
-//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
-// Locales
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Locais (itens e passagens)
 
 const hyruleLocales = new Map([
   ["powerDungeon", { x: 5, y: 32, image: dungeonDoorImage }],
@@ -43,22 +47,22 @@ const hyruleLocales = new Map([
 ]);
 
 const powerDungeonLocales = new Map([
-  ["exit", { x: 14, y: 26, image: dungeonDoorImage }],
+  ["exitPowerDungeon", { x: 14, y: 26, image: dungeonDoorImage }],
   ["pendantOfPower", { x: 13, y: 3, image: pendantOfPowerImage }],
 ]);
 
 const courageDungeonLocales = new Map([
-  ["exit", { x: 13, y: 25, image: dungeonDoorImage }],
+  ["exitCourageDungeon", { x: 13, y: 25, image: dungeonDoorImage }],
   ["pendantOfCourage", { x: 13, y: 2, image: pendantOfCourageImage }],
 ]);
 
 const wisdomDungeonLocales = new Map([
-  ["exit", { x: 14, y: 25, image: dungeonDoorImage }],
+  ["exitWisdomDungeon", { x: 14, y: 25, image: dungeonDoorImage }],
   ["pendantOfWisdom", { x: 15, y: 19, image: pendantOfWisdomImage }],
 ]);
 
-//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
-// Maps
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Mapas
 
 const hyruleMap = [
   "fffffffffffffffmmmmmmmmmmmmmmmmmmmmmmmmmmm",
@@ -198,26 +202,59 @@ const wisdomDungeonMap = [
   "wwwwwwwwwwwwwwwwwwwwwwwwwwww",
 ];
 
-//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
-// Other consts
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Regiões
+
+const hyrule = {
+  id: "hyrule",
+  map: [...hyruleMap],
+  terrains: new Map(hyruleTerrains),
+  locales: new Map(hyruleLocales),
+};
+
+const powerDungeon = {
+  id: "powerDungeon",
+  map: [...powerDungeonMap],
+  terrains: new Map(dungeonTerrains),
+  locales: new Map(powerDungeonLocales),
+};
+
+const courageDungeon = {
+  id: "courageDungeon",
+  map: [...courageDungeonMap],
+  terrains: new Map(dungeonTerrains),
+  locales: new Map(courageDungeonLocales),
+};
+
+const wisdomDungeon = {
+  id: "wisdomDungeon",
+  map: [...wisdomDungeonMap],
+  terrains: new Map(dungeonTerrains),
+  locales: new Map(wisdomDungeonLocales),
+};
+
+const limbo = {
+  id: "limbo",
+  map: [],
+  terrains: new Map(limboTerrains),
+  locales: new Map(),
+};
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Outras constantes
 
 const tileSize = 20;
 const defaultBackgroundColor = "#ffffff";
 
-//\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\\\//\\//\\//\\//\\//\\//\\
-// Exports
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Exportações
 
 export {
-  hyruleTerrains,
-  dungeonTerrains,
-  hyruleLocales,
-  powerDungeonLocales,
-  courageDungeonLocales,
-  wisdomDungeonLocales,
-  hyruleMap,
-  powerDungeonMap,
-  courageDungeonMap,
-  wisdomDungeonMap,
+  hyrule,
+  powerDungeon,
+  courageDungeon,
+  wisdomDungeon,
+  limbo,
   tileSize,
   defaultBackgroundColor,
 };
