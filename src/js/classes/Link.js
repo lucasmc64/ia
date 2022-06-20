@@ -106,6 +106,7 @@ class Link {
   }
 
   set hasPendantOfCourage(hasPendantOfCourage) {
+    this.notify("pendantCaught", null);
     this.#hasPendantOfCourage = hasPendantOfCourage;
   }
 
@@ -114,6 +115,7 @@ class Link {
   }
 
   set hasPendantOfPower(hasPendantOfPower) {
+    this.notify("pendantCaught", null);
     this.#hasPendantOfPower = hasPendantOfPower;
   }
 
@@ -122,6 +124,7 @@ class Link {
   }
 
   set hasPendantOfWisdom(hasPendantOfWisdom) {
+    this.notify("pendantCaught", null);
     this.#hasPendantOfWisdom = hasPendantOfWisdom;
   }
 
