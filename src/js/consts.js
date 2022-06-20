@@ -39,26 +39,36 @@ pendantOfWisdomImage.src = "assets/wisdom_128px.png";
 // Locais (itens e passagens)
 
 const hyruleLocales = new Map([
-  ["powerDungeon", { x: 5, y: 32, image: dungeonDoorImage }],
-  ["courageDungeon", { x: 39, y: 17, image: dungeonDoorImage }],
-  ["wisdomDungeon", { x: 24, y: 1, image: dungeonDoorImage }],
-  ["lostWoods", { x: 6, y: 5, image: lostWoodsDoorImage }],
-  ["masterSword", { x: 2, y: 1, image: masterSwordImage }],
+  ["powerDungeon", { x: 5, y: 32, image: dungeonDoorImage, goal: true }],
+  ["courageDungeon", { x: 39, y: 17, image: dungeonDoorImage, goal: true }],
+  ["wisdomDungeon", { x: 24, y: 1, image: dungeonDoorImage, goal: true }],
+  ["lostWoods", { x: 6, y: 5, image: lostWoodsDoorImage, goal: false }],
+  ["masterSword", { x: 2, y: 1, image: masterSwordImage, goal: false }],
+  ["linksHouse", { x: 24, y: 27, image: null, goal: false }],
 ]);
 
 const powerDungeonLocales = new Map([
-  ["exitPowerDungeon", { x: 14, y: 26, image: dungeonDoorImage }],
-  ["pendantOfPower", { x: 13, y: 3, image: pendantOfPowerImage }],
+  ["exitPowerDungeon", { x: 14, y: 26, image: dungeonDoorImage, goal: false }],
+  ["pendantOfPower", { x: 13, y: 3, image: pendantOfPowerImage, goal: false }],
 ]);
 
 const courageDungeonLocales = new Map([
-  ["exitCourageDungeon", { x: 13, y: 25, image: dungeonDoorImage }],
-  ["pendantOfCourage", { x: 13, y: 2, image: pendantOfCourageImage }],
+  [
+    "exitCourageDungeon",
+    { x: 13, y: 25, image: dungeonDoorImage, goal: false },
+  ],
+  [
+    "pendantOfCourage",
+    { x: 13, y: 2, image: pendantOfCourageImage, goal: false },
+  ],
 ]);
 
 const wisdomDungeonLocales = new Map([
-  ["exitWisdomDungeon", { x: 14, y: 25, image: dungeonDoorImage }],
-  ["pendantOfWisdom", { x: 15, y: 19, image: pendantOfWisdomImage }],
+  ["exitWisdomDungeon", { x: 14, y: 25, image: dungeonDoorImage, goal: false }],
+  [
+    "pendantOfWisdom",
+    { x: 15, y: 19, image: pendantOfWisdomImage, goal: false },
+  ],
 ]);
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
