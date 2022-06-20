@@ -12,17 +12,77 @@ import {
 const canvas = window.document.getElementById("map");
 const context = canvas.getContext("2d");
 
-const link = new Link(24, 27, limbo);
+const link = new Link(0, 0, limbo);
 
-function openLostWoods() {
-  if (
-    link.hasPendantOfCourage &&
-    link.hasPendantOfPower &&
-    link.hasPendantOfWisdom
-  ) {
-    hyrule.locales.get("lostWoods").image.src = "assets/open_door_128px.png";
-  }
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Função responsável por calcular a heurística de uma dada posição em relação a outra
+
+function calculateHeuristics(position1, position2) {
+  return (
+    Math.abs(position1.x - position2.x) + Math.abs(position1.y - position2.y)
+  );
 }
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Função responsável por verificar se uma dada posição é válida
+
+function checkIfIsAValidPosition(position, region) {
+  return (
+    position.y >= region.axisCorrection.y &&
+    position.y < region.map.length - region.axisCorrection.y &&
+    position.x >= region.axisCorrection.x &&
+    position.x < region.map[0].length - region.axisCorrection.x
+  );
+}
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Função responsável por
+
+function thinkLink(currentPosition, region) {
+  console.log(
+    [...region.locales.values()]
+      .filter(({ goal }) => goal)
+      .map(({ x, y }) => ({
+        x,
+        y,
+        heuristic: calculateHeuristics(currentPosition, { x, y }),
+      })),
+  );
+
+  const goal = [...region.locales.values()]
+    .filter(({ goal }) => goal)
+    .map(({ x, y }) => ({ x, y }))
+    .reduce((goal1, goal2) => {
+      if (goal1 === null) {
+        return goal2;
+      } else {
+        return calculateHeuristics(currentPosition, goal1) <
+          calculateHeuristics(currentPosition, goal2)
+          ? goal1
+          : goal2;
+      }
+    }, null);
+
+  const positions = [
+    { x: currentPosition.x - 1, y: currentPosition.y },
+    { x: currentPosition.x + 1, y: currentPosition.y },
+    { x: currentPosition.x, y: currentPosition.y + 1 },
+    { x: currentPosition.x, y: currentPosition.y - 1 },
+  ]
+    .filter((position) => checkIfIsAValidPosition(position, region))
+    .map((position) => {
+      return {
+        position,
+        heuristic: calculateHeuristics(position, goal),
+        parent: currentPosition,
+      };
+    });
+
+  console.log(goal, positions);
+}
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Função responsável por atualizar o mapa atual
 
 function updateRegionDrawing({
   region,
@@ -44,14 +104,15 @@ function updateRegionDrawing({
         context.strokeRect(x * tileSize, y * tileSize, tileSize, tileSize);
 
       [...region.locales.entries()]
-        .filter(([key, _]) => {
+        .filter(([key, locale]) => {
           return (
-            (key !== "pendantOfPower" &&
+            locale.image !== null &&
+            ((key !== "pendantOfPower" &&
               key !== "pendantOfCourage" &&
               key !== "pendantOfWisdom") ||
-            (key === "pendantOfPower" && !link.hasPendantOfPower) ||
-            (key === "pendantOfCourage" && !link.hasPendantOfCourage) ||
-            (key === "pendantOfWisdom" && !link.hasPendantOfWisdom)
+              (key === "pendantOfPower" && !link.hasPendantOfPower) ||
+              (key === "pendantOfCourage" && !link.hasPendantOfCourage) ||
+              (key === "pendantOfWisdom" && !link.hasPendantOfWisdom))
           );
         })
         .map(([_, locale]) => locale)
@@ -80,6 +141,9 @@ function updateRegionDrawing({
     }
   }
 }
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+// Função responsável pelas trocas entre mapas
 
 function changeRegionDrawing({
   currentRegion,
@@ -123,14 +187,15 @@ function changeRegionDrawing({
         );
 
       [...region.locales.entries()]
-        .filter(([key, _]) => {
+        .filter(([key, locale]) => {
           return (
-            (key !== "pendantOfPower" &&
+            locale.image !== null &&
+            ((key !== "pendantOfPower" &&
               key !== "pendantOfCourage" &&
               key !== "pendantOfWisdom") ||
-            (key === "pendantOfPower" && !link.hasPendantOfPower) ||
-            (key === "pendantOfCourage" && !link.hasPendantOfCourage) ||
-            (key === "pendantOfWisdom" && !link.hasPendantOfWisdom)
+              (key === "pendantOfPower" && !link.hasPendantOfPower) ||
+              (key === "pendantOfCourage" && !link.hasPendantOfCourage) ||
+              (key === "pendantOfWisdom" && !link.hasPendantOfWisdom))
           );
         })
         .map(([_, locale]) => locale)
@@ -179,178 +244,6 @@ function changeRegionDrawing({
   }
 }
 
-/*
-function checkPosition() {
-  if (link.region.map === hyrule.map) {
-    if (
-      link.x === hyrule.locales.get("powerDungeon").x &&
-      link.y === hyrule.locales.get("powerDungeon").y &&
-      !link.hasPendantOfPower
-    ) {
-      link.region = powerDungeon;
-
-      // link.x = powerDungeon.locales.get("exit").x;
-      // link.y = powerDungeon.locales.get("exit").y;
-    } else if (
-      link.x === hyrule.locales.get("courageDungeon").x &&
-      link.y === hyrule.locales.get("courageDungeon").y &&
-      !link.hasPendantOfCourage
-    ) {
-      link.region = courageDungeon;
-
-      // link.x = courageDungeon.locales.get("exit").x;
-      // link.y = courageDungeon.locales.get("exit").y;
-    } else if (
-      link.x === hyrule.locales.get("wisdomDungeon").x &&
-      link.y === hyrule.locales.get("wisdomDungeon").y &&
-      !link.hasPendantOfWisdom
-    ) {
-      link.region = wisdomDungeon;
-
-      // link.x = wisdomDungeon.locales.get("exit").x;
-      // link.y = wisdomDungeon.locales.get("exit").y;
-    }
-  }
-
-  if (link.region === powerDungeon) {
-    if (
-      link.x === powerDungeon.locales.get("exit").x &&
-      link.y === powerDungeon.locales.get("exit").y &&
-      link.hasPendantOfPower
-    ) {
-      link.region = hyrule;
-
-      // link.x = hyrule.locales.get("powerDungeon").x;
-      // link.y = hyrule.locales.get("powerDungeon").y;
-    } else if (
-      link.x === powerDungeon.locales.get("pendantOfPower").x &&
-      link.y === powerDungeon.locales.get("pendantOfPower").y
-    ) {
-      link.hasPendantOfPower = true;
-      openLostWoods();
-    }
-  }
-
-  if (link.region === courageDungeon) {
-    if (
-      link.x === courageDungeon.locales.get("exit").x &&
-      link.y === courageDungeon.locales.get("exit").y &&
-      link.hasPendantOfCourage
-    ) {
-      link.region = hyrule;
-
-      // link.x = hyrule.locales.get("courageDungeon").x;
-      // link.y = hyrule.locales.get("courageDungeon").y;
-    } else if (
-      link.x === courageDungeon.locales.get("pendantOfCourage").x &&
-      link.y === courageDungeon.locales.get("pendantOfCourage").y
-    ) {
-      link.hasPendantOfCourage = true;
-      openLostWoods();
-    }
-  }
-
-  if (link.region === wisdomDungeon) {
-    if (
-      link.x === wisdomDungeon.locales.get("exit").x &&
-      link.y === wisdomDungeon.locales.get("exit").y &&
-      link.hasPendantOfWisdom
-    ) {
-      link.region = hyrule;
-
-      // link.x = hyrule.locales.get("wisdomDungeon").x;
-      // link.y = hyrule.locales.get("wisdomDungeon").y;
-    } else if (
-      link.x === wisdomDungeon.locales.get("pendantOfWisdom").x &&
-      link.y === wisdomDungeon.locales.get("pendantOfWisdom").y
-    ) {
-      link.hasPendantOfWisdom = true;
-      openLostWoods();
-    }
-  }
-}
-
-// função de teste
-function andaPower() {
-  if (link.region === hyrule) {
-    link.x = hyrule.locales.get("powerDungeon").x;
-    link.y = hyrule.locales.get("powerDungeon").y;
-    checkPosition();
-  }
-}
-// função de teste
-function andaCourage() {
-  if (link.region === hyrule) {
-    link.x = hyrule.locales.get("courageDungeon").x;
-    link.y = hyrule.locales.get("courageDungeon").y;
-    checkPosition();
-  }
-}
-// função de teste
-function andaWisdom() {
-  if (link.region === hyrule) {
-    link.x = hyrule.locales.get("wisdomDungeon").x;
-    link.y = hyrule.locales.get("wisdomDungeon").y;
-    checkPosition();
-  }
-}
-// função de teste
-function andaHyrule() {
-  if (link.region === powerDungeon) {
-    link.x = powerDungeon.locales.get("exit").x;
-    link.y = powerDungeon.locales.get("exit").y;
-    checkPosition();
-  } else if (link.region === courageDungeon) {
-    link.x = courageDungeon.locales.get("exit").x;
-    link.y = courageDungeon.locales.get("exit").y;
-    checkPosition();
-  } else if (link.region === wisdomDungeon) {
-    link.x = wisdomDungeon.locales.get("exit").x;
-    link.y = wisdomDungeon.locales.get("exit").y;
-    checkPosition();
-  }
-}
-// função de teste
-function pegaPoder() {
-  if (link.region === powerDungeon) {
-    link.x = powerDungeon.locales.get("pendantOfPower").x;
-    link.y = powerDungeon.locales.get("pendantOfPower").y;
-    checkPosition();
-  }
-}
-// função de teste
-function pegaCoragem() {
-  if (link.region === courageDungeon) {
-    link.x = courageDungeon.locales.get("pendantOfCourage").x;
-    link.y = courageDungeon.locales.get("pendantOfCourage").y;
-    checkPosition();
-  }
-}
-// função de teste
-function pegaSabedoria() {
-  if (link.region === wisdomDungeon) {
-    link.x = wisdomDungeon.locales.get("pendantOfWisdom").x;
-    link.y = wisdomDungeon.locales.get("pendantOfWisdom").y;
-    checkPosition();
-  }
-}
-// botões de teste
-const button1 = window.document.getElementById("button1");
-button1.addEventListener("click", andaPower);
-const button2 = window.document.getElementById("button2");
-button2.addEventListener("click", andaCourage);
-const button3 = window.document.getElementById("button3");
-button3.addEventListener("click", andaWisdom);
-const button4 = window.document.getElementById("button4");
-button4.addEventListener("click", andaHyrule);
-const button5 = window.document.getElementById("button5");
-button5.addEventListener("click", pegaPoder);
-const button6 = window.document.getElementById("button6");
-button6.addEventListener("click", pegaCoragem);
-const button7 = window.document.getElementById("button7");
-button7.addEventListener("click", pegaSabedoria);
-*/
-
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Função responsável por configurar o estado inicial da aplicação
 
@@ -359,6 +252,11 @@ function start() {
   canvas.height = biggestMapSize * tileSize;
   context.lineWidth = 0.25;
   context.strokeStyle = "#000000";
+
+  const { x: linkInitialX, y: linkInitialY } = hyrule.locales.get("linksHouse");
+
+  link.x = linkInitialX;
+  link.y = linkInitialY;
 
   link.subscribe("linkPositionChange", updateRegionDrawing);
   link.subscribe("regionChange", changeRegionDrawing);
@@ -515,6 +413,16 @@ function start() {
     );
   });
 
+  link.subscribe("pendantCaught", () => {
+    if (
+      link.hasPendantOfCourage &&
+      link.hasPendantOfPower &&
+      link.hasPendantOfWisdom
+    ) {
+      hyrule.locales.get("lostWoods").image.src = "assets/open_door_128px.png";
+    }
+  });
+
   link.region = { region: hyrule };
 }
 
@@ -533,6 +441,7 @@ function handlePlayButtonClick(event) {
 
 function handleKeydown(event) {
   if (event.key === "ArrowUp") {
+    thinkLink({ x: link.x, y: link.y }, link.region);
     if (link.y - 1 >= link.region.axisCorrection.y) {
       link.y -= 1;
     }
