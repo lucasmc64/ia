@@ -27,3 +27,5 @@
 - [x] Verificar comparações em `drawSprite`
 - [x] Refatorar para aglomerar `terrains` e `locales` em seus devidos "mapas"
 - [ ] Efeito de Link pegando o pingente?
+
+- Mudar path pra Map, usar como chave o id da região

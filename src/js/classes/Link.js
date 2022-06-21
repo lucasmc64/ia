@@ -1,6 +1,7 @@
 class Link {
   #x;
   #y;
+  // #position;
 
   #image;
 
@@ -14,6 +15,8 @@ class Link {
 
   #canMove;
 
+  #path;
+
   constructor(x, y, region) {
     if (!x && !y && !region)
       throw new Error(
@@ -22,6 +25,7 @@ class Link {
 
     this.#x = x;
     this.#y = y;
+    //this.#position = { x, y };
 
     this.#image = new Image();
     this.#image.src = "assets/link_128px.png";
@@ -34,10 +38,13 @@ class Link {
 
     this.#observers = new Map();
 
-    this.#canMove = true;
+    this.#canMove = false;
+    this.#path = [];
   }
 
   set x(x) {
+    this.#x = x;
+
     if (
       [...this.#region.locales.values()].some(
         (position) =>
@@ -50,19 +57,15 @@ class Link {
           position.x + this.#region.axisCorrection.x === x &&
           position.y + this.#region.axisCorrection.y === this.#y
         ) {
-          console.log(locale, this);
           this.notify(locale, null);
         }
       });
     } else {
       this.notify("linkPositionChange", {
         currentLinkPosition: { x, y: this.y },
-        previousLinkPosition: { x: this.x, y: this.y },
         region: this.#region,
       });
     }
-
-    this.#x = x;
   }
 
   get x() {
@@ -70,6 +73,8 @@ class Link {
   }
 
   set y(y) {
+    this.#y = y;
+
     if (
       [...this.#region.locales.values()].some(
         (position) =>
@@ -82,7 +87,6 @@ class Link {
           position.x + this.#region.axisCorrection.x === this.#x &&
           position.y + this.#region.axisCorrection.y === y
         ) {
-          console.log(locale, this);
           this.notify(locale, null);
         }
       });
@@ -93,20 +97,48 @@ class Link {
         region: this.#region,
       });
     }
-
-    this.#y = y;
   }
 
   get y() {
     return this.#y;
   }
 
+  set position({ x, y }) {
+    if (
+      [...this.#region.locales.values()].some(
+        (position) =>
+          position.x + this.#region.axisCorrection.x === x &&
+          position.y + this.#region.axisCorrection.y === y,
+      )
+    ) {
+      [...this.#region.locales.entries()].forEach(([locale, position]) => {
+        if (
+          position.x + this.#region.axisCorrection.x === x &&
+          position.y + this.#region.axisCorrection.y === y
+        ) {
+          this.notify(locale, null);
+        }
+      });
+    } else {
+      this.notify("linkPositionChange", {
+        currentLinkPosition: { x, y },
+        region: this.#region,
+      });
+    }
+
+    this.#x = x;
+    this.#y = y;
+  }
+
+  // get position() {
+  //   return this.#position;
+  // }
+
   get image() {
     return this.#image;
   }
 
   set hasPendantOfCourage(hasPendantOfCourage) {
-    this.notify("pendantCaught", null);
     this.#hasPendantOfCourage = hasPendantOfCourage;
   }
 
@@ -115,7 +147,6 @@ class Link {
   }
 
   set hasPendantOfPower(hasPendantOfPower) {
-    this.notify("pendantCaught", null);
     this.#hasPendantOfPower = hasPendantOfPower;
   }
 
@@ -124,7 +155,6 @@ class Link {
   }
 
   set hasPendantOfWisdom(hasPendantOfWisdom) {
-    this.notify("pendantCaught", null);
     this.#hasPendantOfWisdom = hasPendantOfWisdom;
   }
 
@@ -148,12 +178,21 @@ class Link {
   }
 
   set canMove(boolean) {
-    this.notify("movePermissionChange", boolean);
     this.#canMove = boolean;
+    this.notify("movementPermissionChange", boolean);
   }
 
   get canMove() {
     return this.#canMove;
+  }
+
+  set path(path) {
+    this.#path = path;
+    this.notify("pathUpdated", null);
+  }
+
+  get path() {
+    return this.#path;
   }
 
   subscribe(eventType, fn) {

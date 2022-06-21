@@ -49,7 +49,7 @@ const hyruleLocales = new Map([
 
 const powerDungeonLocales = new Map([
   ["exitPowerDungeon", { x: 14, y: 26, image: dungeonDoorImage, goal: false }],
-  ["pendantOfPower", { x: 13, y: 3, image: pendantOfPowerImage, goal: false }],
+  ["pendantOfPower", { x: 13, y: 3, image: pendantOfPowerImage, goal: true }],
 ]);
 
 const courageDungeonLocales = new Map([
@@ -59,7 +59,7 @@ const courageDungeonLocales = new Map([
   ],
   [
     "pendantOfCourage",
-    { x: 13, y: 2, image: pendantOfCourageImage, goal: false },
+    { x: 13, y: 2, image: pendantOfCourageImage, goal: true },
   ],
 ]);
 
@@ -67,7 +67,7 @@ const wisdomDungeonLocales = new Map([
   ["exitWisdomDungeon", { x: 14, y: 25, image: dungeonDoorImage, goal: false }],
   [
     "pendantOfWisdom",
-    { x: 15, y: 19, image: pendantOfWisdomImage, goal: false },
+    { x: 15, y: 19, image: pendantOfWisdomImage, goal: true },
   ],
 ]);
 
