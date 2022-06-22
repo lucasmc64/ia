@@ -1,5 +1,5 @@
 import Link from "./classes/Link.js";
-import { tileSize, defaultBackgroundColor } from "./consts.js";
+import { tileSize, defaultBackgroundColor, linkSpeed } from "./consts.js";
 import {
   hyrule,
   powerDungeon,
@@ -38,34 +38,40 @@ function positionWasExplored(movement, { x, y }) {
 }
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-// Função responsável por verificar se uma dada posição é válida
+// Função responsável por
 
 function checkIfIsAValidPosition(position, region, path) {
-  return (
-    position.y >= region.axisCorrection.y &&
-    position.y < region.map.length - region.axisCorrection.y &&
-    position.x >= region.axisCorrection.x &&
-    position.x < region.map[0].length - region.axisCorrection.x &&
-    path.every((movement) => !positionWasExplored(movement, position))
-  );
-}
+  if (
+    !(
+      position.y >= region.axisCorrection.y &&
+      position.y < region.map.length - region.axisCorrection.y &&
+      position.x >= region.axisCorrection.x &&
+      position.x < region.map[0].length - region.axisCorrection.x
+    )
+  )
+    return false;
 
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-// Função responsável por gerar um id para o movimento
+  if (region.terrains.get(region.map[position.y][position.x]).cost === null)
+    return false;
 
-function generateId() {
-  return `${Date.now()}-${Math.trunc(Math.random() * 100000000000) * 2}`;
+  return path.every((movement) => !positionWasExplored(movement, position));
 }
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Função responsável por
 
-async function generateBestPath(goalPosition, path = []) {
+function generateBestPath(
+  goalPosition,
+  path = [],
+  deadPath = [],
+  currentRegion,
+  currentLinkPosition,
+) {
   const parent = path.length !== 0 ? path[0] : null;
 
   const currentPosition = parent
     ? { ...parent.position }
-    : { x: link.x, y: link.y };
+    : { ...currentLinkPosition };
 
   if (
     currentPosition.x === goalPosition.x &&
@@ -74,7 +80,8 @@ async function generateBestPath(goalPosition, path = []) {
     return parent;
   }
 
-  let newPath = [];
+  let newPath = [],
+    newDeadPath = [];
 
   if (parent) {
     const possibleMovements = [
@@ -84,23 +91,31 @@ async function generateBestPath(goalPosition, path = []) {
       { x: currentPosition.x, y: currentPosition.y - 1 },
     ]
       .filter((position) =>
-        checkIfIsAValidPosition(position, link.region, path),
+        checkIfIsAValidPosition(position, currentRegion, [
+          ...path,
+          ...deadPath,
+        ]),
       )
       .map((possiblePosition) => {
         return {
-          id: generateId(),
           position: { ...possiblePosition },
           heuristic: calculateHeuristics(possiblePosition, goalPosition),
           cost:
             parent.cost +
-            link.region.terrains.get(
-              link.region.map[possiblePosition.y][possiblePosition.x],
+            currentRegion.terrains.get(
+              currentRegion.map[possiblePosition.y][possiblePosition.x],
             ).cost,
           parent,
         };
       });
 
-    newPath = [...link.path.slice(1), ...possibleMovements].sort(
+    if (possibleMovements.length === 0) {
+      newDeadPath = [...deadPath, path[0]];
+    } else {
+      newDeadPath = [...deadPath];
+    }
+
+    newPath = [...path.slice(1), ...possibleMovements].sort(
       (possibleMovement1, possibleMovement2) => {
         const totalCost1 = possibleMovement1.heuristic + possibleMovement1.cost;
         const totalCost2 = possibleMovement2.heuristic + possibleMovement2.cost;
@@ -117,7 +132,6 @@ async function generateBestPath(goalPosition, path = []) {
   } else {
     newPath = [
       {
-        id: generateId(),
         position: { ...currentPosition },
         cost: 0,
         heuristic: calculateHeuristics(currentPosition, goalPosition),
@@ -126,211 +140,80 @@ async function generateBestPath(goalPosition, path = []) {
     ];
   }
 
-  return generateBestPath(goalPosition, newPath);
+  return generateBestPath(
+    goalPosition,
+    newPath,
+    newDeadPath,
+    currentRegion,
+    currentLinkPosition,
+  );
+}
+
+//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
+
+function unzipPath(path) {
+  let currentMovement = path;
+  const formattedPath = [];
+
+  while (currentMovement.parent !== null) {
+    formattedPath.unshift(currentMovement.position);
+    currentMovement = currentMovement.parent;
+  }
+
+  return formattedPath;
 }
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Função responsável por
 
-async function chooseGoal() {
-  const goalsPositions = [...link.region.locales.values()]
+function thinkLink(currentRegion, currentLinkPosition) {
+  const goals = [...currentRegion.locales.values()]
     .filter(({ goal }) => goal)
-    .map(({ x, y }) => ({ x, y }));
+    .map(({ x, y }) =>
+      generateBestPath(
+        {
+          x: x + currentRegion.axisCorrection.x,
+          y: y + currentRegion.axisCorrection.y,
+        },
+        [],
+        [],
+        currentRegion,
+        currentLinkPosition,
+      ),
+    );
 
-  console.log("CALCULANDO...");
-
-  const bestPaths = [];
-
-  const path1 = await generateBestPath(goalsPositions[0]);
-  console.log(path1);
-
-  const path2 = await generateBestPath(goalsPositions[1]);
-  console.log(path2);
-
-  const path3 = await generateBestPath(goalsPositions[2]);
-  console.log(path3);
-
-  // for (const goalPosition of goalsPositions) {
-  //   bestPaths.push(path);
-  // }
-
-  // console.log(bestPaths);
+  if (goals.length !== 0) {
+    return unzipPath(
+      goals.reduce((goal1, goal2) => {
+        return goal1.cost > goal2.cost ? goal2 : goal1;
+      }, goals[0]),
+    );
+  } else {
+    return [];
+  }
 }
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-// Função responsável por achar o pai de uma sub-árvore a partir da raiz
+// Função responsável por
 
-// function findSubTreePath(movements) {
-//   if (movements[0].parent.parent === null) {
-//     return movements.slice(0, -1);
-//   } else {
-//     return findSubTreePath([movements[0].parent, ...movements]);
-//   }
-// }
+function moveLink(nextPositions = []) {
+  if (nextPositions.length === 0) return false;
 
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-// Função responsável por ir para o próximo movimento
+  link.position = nextPositions[0];
 
-// function moveLink(newPosition) {
-//   // console.log("newPosition", newPosition, { x: link.x, y: link.y });
-//   if (link.x !== newPosition.x || link.y !== newPosition.y) {
-//     link.position = newPosition;
-//   }
-// }
-
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-// Função responsável por ir para o próximo movimento a partir da raiz
-
-// async function auxMoveLink(movements) {
-//   if (movements.length) return false;
-
-//   return new Promise((resolve, reject) => {
-//     moveLink(movements[0].position);
-
-//     setTimeout(() => {
-//       resolve(auxMoveLink(movements.slice(1)));
-//     }, 250);
-//   });
-// }
-
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-// Função responsável por atualizar posição do link durante a busca
-
-// async function updateLinkPosition(currentMovement, nextMovement) {
-//   console.log(currentMovement.position, nextMovement.position);
-//   return new Promise((resolve, reject) => {
-//     if (
-//       currentMovement.parent !== null &&
-//       currentMovement.id !== nextMovement.parent.id
-//     ) {
-//       moveLink(currentMovement.parent.position);
-
-//       setTimeout(() => {
-//         resolve(updateLinkPosition(currentMovement.parent, nextMovement));
-//       }, 250);
-//     } else if (currentMovement.id === nextMovement.parent.id) {
-//       moveLink(currentMovement.position);
-
-//       resolve();
-//     } else if (currentMovement.parent === null) {
-//       // console.log(findSubTreePath([nextMovement]));
-//       // resolve(auxMoveLink(findSubTreePath([nextMovement])));
-//     }
-//   });
-// }
-
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-// Função responsável por encontrar os próximos movimentos de Link
-
-// function thinkLink() {
-//   // console.log("thinkLink call");
-
-//   const parent = link.path.length !== 0 ? link.path[0] : null;
-
-//   const currentPosition = parent
-//     ? { ...parent.position }
-//     : { x: link.x, y: link.y };
-
-//   const goalPosition = [...link.region.locales.values()]
-//     .filter(({ goal }) => goal)
-//     .map(({ x, y }) => ({ x, y }))
-//     .reduce((goalPosition1, goalPosition2) => {
-//       if (goalPosition1 === null) {
-//         return goalPosition2;
-//       } else {
-//         return calculateHeuristics(currentPosition, goalPosition1) <
-//           calculateHeuristics(currentPosition, goalPosition2)
-//           ? goalPosition1
-//           : goalPosition2;
-//       }
-//     }, null);
-
-//   if (!goalPosition) return false; // Fim de jogo
-
-//   if (parent) {
-//     const possibleMovements = [
-//       { x: currentPosition.x - 1, y: currentPosition.y },
-//       { x: currentPosition.x + 1, y: currentPosition.y },
-//       { x: currentPosition.x, y: currentPosition.y + 1 },
-//       { x: currentPosition.x, y: currentPosition.y - 1 },
-//     ]
-//       .filter((position) =>
-//         checkIfIsAValidPosition(position, link.region, link.path),
-//       )
-//       .map((possiblePosition) => {
-//         return {
-//           id: generateId(),
-//           position: { ...possiblePosition },
-//           heuristic: calculateHeuristics(possiblePosition, goalPosition),
-//           cost:
-//             parent.cost +
-//             link.region.terrains.get(
-//               link.region.map[possiblePosition.y][possiblePosition.x],
-//             ).cost,
-//           parent,
-//         };
-//       });
-
-//     const newPath = [...link.path.slice(1), ...possibleMovements].sort(
-//       (possibleMovement1, possibleMovement2) => {
-//         const totalCost1 = possibleMovement1.heuristic + possibleMovement1.cost;
-//         const totalCost2 = possibleMovement2.heuristic + possibleMovement2.cost;
-
-//         if (totalCost1 !== totalCost2) {
-//           return totalCost1 - totalCost2;
-//         } else if (possibleMovement1.position.x !== possibleMovement2.x) {
-//           return possibleMovement1.position.x - possibleMovement2.position.x;
-//         } else if (possibleMovement1.position.y !== possibleMovement2.y) {
-//           return possibleMovement1.position.y - possibleMovement2.position.y;
-//         }
-//       },
-//     );
-
-//     console.log(
-//       "thinkLink has parent",
-//       newPath.map((movement) => [movement.heuristic + movement.cost, movement]),
-//     );
-
-//     //link.canMove = false;
-//     //updateLinkPosition(parent, newPath[0]).then(() => {
-//     //  link.canMove = true;
-//     //});
-//     link.path = newPath;
-//   } else {
-//     console.log(
-//       "thinkLink do not has parent",
-//       [
-//         {
-//           id: generateId(),
-//           position: { ...currentPosition },
-//           cost: 0,
-//           heuristic: calculateHeuristics(currentPosition, goalPosition),
-//           parent: null,
-//         },
-//       ].map((movement) => [movement.heuristic + movement.cost, movement]),
-//     );
-
-//     link.path = [
-//       {
-//         id: generateId(),
-//         position: { ...currentPosition },
-//         cost: 0,
-//         heuristic: calculateHeuristics(currentPosition, goalPosition),
-//         parent: null,
-//       },
-//     ];
-//   }
-// }
-
-//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
-// Função responsável por calcular rotas
+  setTimeout(() => {
+    moveLink(nextPositions.slice(1));
+  }, linkSpeed);
+}
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Função responsável por atualizar o mapa atual
 
-function updateRegionDrawing({ region, currentLinkPosition }) {
-  console.log("updateRegionDrawing call");
-
+function updateRegionDrawing({
+  region,
+  currentLinkPosition,
+  animationEndHandlers = [],
+}) {
   for (let y = 0; y < region.map.length; y++) {
     for (let x = 0; x < region.map.length; x++) {
       const key = region.map[y][x];
@@ -380,6 +263,8 @@ function updateRegionDrawing({ region, currentLinkPosition }) {
       );
     }
   }
+
+  animationEndHandlers.forEach((animationEndHandler) => animationEndHandler());
 }
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
@@ -390,9 +275,8 @@ function changeRegionDrawing({
   previousRegion,
   currentLinkPosition,
   previousLinkPosition,
+  animationEndHandlers,
 }) {
-  console.log("changeRegionDrawing call");
-
   if (link.canMove) {
     link.canMove = false;
   }
@@ -478,6 +362,10 @@ function changeRegionDrawing({
       }
 
       link.canMove = true;
+
+      animationEndHandlers.forEach((animationEndHandler) =>
+        animationEndHandler(),
+      );
     }
   };
 
@@ -502,8 +390,8 @@ function openLostWoods() {
     return false;
 
   hyrule.locales.get("lostWoods").image.src = "assets/open_door_128px.png";
-  hyrule.locales.set("lostWoods", {
-    ...hyrule.locales.get("lostWoods"),
+  hyrule.locales.set("linksHouse", {
+    ...hyrule.locales.get("linksHouse"),
     goal: true,
   });
 }
@@ -519,256 +407,332 @@ function start() {
 
   const { x: linkInitialX, y: linkInitialY } = hyrule.locales.get("linksHouse");
 
-  link.position = { x: linkInitialX, y: linkInitialY };
+  link.position = {
+    x: linkInitialX + hyrule.axisCorrection.x,
+    y: linkInitialY + hyrule.axisCorrection.y,
+  };
 
-  // link.subscribe("linkPositionChange", (props) => {
-  //   console.log("linkPositionChange", { x: link.x, y: link.y });
-  //   updateRegionDrawing(props);
+  link.subscribe("linkPositionChange", (props) => {
+    updateRegionDrawing(props);
+  });
 
-  //   if (link.canMove) {
-  //     setTimeout(() => {
-  //       // thinkLink();
-  //     }, 500);
-  //   }
-  // });
+  link.subscribe(
+    "regionChange",
+    ({ currentRegion, currentLinkPosition, ...props }) => {
+      changeRegionDrawing({
+        ...props,
+        currentRegion,
+        currentLinkPosition,
+        animationEndHandlers: [
+          () => {
+            setTimeout(() => {
+              moveLink(thinkLink(currentRegion, currentLinkPosition));
+            }, linkSpeed);
+          },
+        ],
+      });
+    },
+  );
 
-  link.subscribe("regionChange", changeRegionDrawing);
+  const formatUpdateRegionDrawingData = (region, localeKey) => {
+    const { x, y } = region.locales.get(localeKey);
 
-  // const formateUpdateRegionDrawingData = (region, localeKey) => {
-  //   const { x, y } = region.locales.get(localeKey);
+    return {
+      region,
+      currentLinkPosition: {
+        x: x + region.axisCorrection.x,
+        y: y + region.axisCorrection.y,
+      },
+    };
+  };
 
-  //   return {
-  //     region,
-  //     currentLinkPosition: {
-  //       x: x + region.axisCorrection.x,
-  //       y: y + region.axisCorrection.y,
-  //     },
-  //   };
-  // };
+  link.subscribe("powerDungeon", () => {
+    if (link.hasPendantOfPower) {
+      hyrule.locales.set("powerDungeon", {
+        ...hyrule.locales.get("powerDungeon"),
+        goal: false,
+      });
 
-  // link.subscribe("powerDungeon", () => {
-  //   if (link.hasPendantOfPower) {
-  //     hyrule.locales.set("powerDungeon", {
-  //       ...hyrule.locales.get("powerDungeon"),
-  //       goal: false,
-  //     });
+      return false;
+    }
 
-  //     updateRegionDrawing(
-  //       formateUpdateRegionDrawingData(hyrule, "powerDungeon"),
-  //     );
-  //   } else {
-  //     const exitPowerDungeon = powerDungeon.locales.get("exitPowerDungeon");
+    // setTimeout(() => {
+    updateRegionDrawing(formatUpdateRegionDrawingData(hyrule, "powerDungeon"));
 
-  //     link.region = {
-  //       region: powerDungeon,
-  //       linkPosition: {
-  //         x: exitPowerDungeon.x + powerDungeon.axisCorrection.x,
-  //         y: exitPowerDungeon.y + powerDungeon.axisCorrection.y,
-  //       },
-  //     };
-  //   }
-  // });
+    const exitPowerDungeon = powerDungeon.locales.get("exitPowerDungeon");
 
-  // link.subscribe("courageDungeon", () => {
-  //   if (link.hasPendantOfCourage) {
-  //     hyrule.locales.set("courageDungeon", {
-  //       ...hyrule.locales.get("courageDungeon"),
-  //       goal: false,
-  //     });
+    link.region = {
+      region: powerDungeon,
+      linkPosition: {
+        x: exitPowerDungeon.x + powerDungeon.axisCorrection.x,
+        y: exitPowerDungeon.y + powerDungeon.axisCorrection.y,
+      },
+    };
+    // }, linkSpeed);
+  });
 
-  //     updateRegionDrawing(
-  //       formateUpdateRegionDrawingData(hyrule, "courageDungeon"),
-  //     );
-  //   } else {
-  //     const exitCourageDungeon =
-  //       courageDungeon.locales.get("exitCourageDungeon");
+  link.subscribe("courageDungeon", () => {
+    if (link.hasPendantOfCourage) {
+      hyrule.locales.set("courageDungeon", {
+        ...hyrule.locales.get("courageDungeon"),
+        goal: false,
+      });
 
-  //     link.region = {
-  //       region: courageDungeon,
-  //       linkPosition: {
-  //         x: exitCourageDungeon.x + courageDungeon.axisCorrection.x,
-  //         y: exitCourageDungeon.y + courageDungeon.axisCorrection.y,
-  //       },
-  //     };
-  //   }
-  // });
+      return false;
+    }
 
-  // link.subscribe("wisdomDungeon", () => {
-  //   if (link.hasPendantOfWisdom) {
-  //     hyrule.locales.set("wisdomDungeon", {
-  //       ...hyrule.locales.get("wisdomDungeon"),
-  //       goal: false,
-  //     });
+    // setTimeout(() => {
+    updateRegionDrawing(
+      formatUpdateRegionDrawingData(hyrule, "courageDungeon"),
+    );
 
-  //     updateRegionDrawing(
-  //       formateUpdateRegionDrawingData(hyrule, "wisdomDungeon"),
-  //     );
-  //   } else {
-  //     const exitWisdomDungeon = wisdomDungeon.locales.get("exitWisdomDungeon");
+    const exitCourageDungeon = courageDungeon.locales.get("exitCourageDungeon");
 
-  //     link.region = {
-  //       region: wisdomDungeon,
-  //       linkPosition: {
-  //         x: exitWisdomDungeon.x + wisdomDungeon.axisCorrection.x,
-  //         y: exitWisdomDungeon.y + wisdomDungeon.axisCorrection.y,
-  //       },
-  //     };
-  //   }
-  // });
+    link.region = {
+      region: courageDungeon,
+      linkPosition: {
+        x: exitCourageDungeon.x + courageDungeon.axisCorrection.x,
+        y: exitCourageDungeon.y + courageDungeon.axisCorrection.y,
+      },
+    };
+    // }, linkSpeed);
+  });
 
-  // link.subscribe("exitPowerDungeon", () => {
-  //   if (!link.hasPendantOfPower) {
-  //     updateRegionDrawing(
-  //       formateUpdateRegionDrawingData(powerDungeon, "exitPowerDungeon"),
-  //     );
+  link.subscribe("wisdomDungeon", () => {
+    if (link.hasPendantOfWisdom) {
+      hyrule.locales.set("wisdomDungeon", {
+        ...hyrule.locales.get("wisdomDungeon"),
+        goal: false,
+      });
 
-  //     return false;
-  //   }
+      return false;
+    }
 
-  //   const powerDungeonLocation = hyrule.locales.get("powerDungeon");
+    // setTimeout(() => {
+    updateRegionDrawing(formatUpdateRegionDrawingData(hyrule, "wisdomDungeon"));
 
-  //   link.region = {
-  //     region: hyrule,
-  //     linkPosition: {
-  //       x: powerDungeonLocation.x + hyrule.axisCorrection.x,
-  //       y: powerDungeonLocation.y + hyrule.axisCorrection.y,
-  //     },
-  //   };
-  // });
+    const exitWisdomDungeon = wisdomDungeon.locales.get("exitWisdomDungeon");
 
-  // link.subscribe("exitCourageDungeon", () => {
-  //   if (!link.hasPendantOfCourage) {
-  //     updateRegionDrawing(
-  //       formateUpdateRegionDrawingData(courageDungeon, "exitCourageDungeon"),
-  //     );
+    link.region = {
+      region: wisdomDungeon,
+      linkPosition: {
+        x: exitWisdomDungeon.x + wisdomDungeon.axisCorrection.x,
+        y: exitWisdomDungeon.y + wisdomDungeon.axisCorrection.y,
+      },
+    };
+    // }, linkSpeed);
+  });
 
-  //     return false;
-  //   }
+  link.subscribe("exitPowerDungeon", () => {
+    if (!link.hasPendantOfPower) {
+      return false;
+    }
 
-  //   const courageDungeonLocation = hyrule.locales.get("courageDungeon");
+    // setTimeout(() => {
+    updateRegionDrawing({
+      ...formatUpdateRegionDrawingData(powerDungeon, "exitPowerDungeon"),
+    });
 
-  //   link.region = {
-  //     region: hyrule,
-  //     linkPosition: {
-  //       x: courageDungeonLocation.x + hyrule.axisCorrection.x,
-  //       y: courageDungeonLocation.y + hyrule.axisCorrection.y,
-  //     },
-  //   };
-  // });
+    const powerDungeonLocation = hyrule.locales.get("powerDungeon");
 
-  // link.subscribe("exitWisdomDungeon", () => {
-  //   if (!link.hasPendantOfWisdom) {
-  //     updateRegionDrawing(
-  //       formateUpdateRegionDrawingData(wisdomDungeon, "exitWisdomDungeon"),
-  //     );
+    link.region = {
+      region: hyrule,
+      linkPosition: {
+        x: powerDungeonLocation.x + hyrule.axisCorrection.x,
+        y: powerDungeonLocation.y + hyrule.axisCorrection.y,
+      },
+    };
+    // }, linkSpeed);
+  });
 
-  //     return false;
-  //   }
+  link.subscribe("exitCourageDungeon", () => {
+    if (!link.hasPendantOfCourage) {
+      return false;
+    }
 
-  //   const wisdomDungeonLocation = hyrule.locales.get("wisdomDungeon");
+    // setTimeout(() => {
+    updateRegionDrawing(
+      formatUpdateRegionDrawingData(courageDungeon, "exitCourageDungeon"),
+    );
 
-  //   link.region = {
-  //     region: hyrule,
-  //     linkPosition: {
-  //       x: wisdomDungeonLocation.x + hyrule.axisCorrection.x,
-  //       y: wisdomDungeonLocation.y + hyrule.axisCorrection.y,
-  //     },
-  //   };
-  // });
+    const courageDungeonLocation = hyrule.locales.get("courageDungeon");
 
-  // link.subscribe("pendantOfPower", () => {
-  //   link.hasPendantOfPower = true;
+    link.region = {
+      region: hyrule,
+      linkPosition: {
+        x: courageDungeonLocation.x + hyrule.axisCorrection.x,
+        y: courageDungeonLocation.y + hyrule.axisCorrection.y,
+      },
+    };
+    // }, linkSpeed);
+  });
 
-  //   powerDungeon.locales.set("pendantOfPower", {
-  //     ...powerDungeon.locales.get("pendantOfPower"),
-  //     goal: false,
-  //   });
-  //   powerDungeon.locales.set("exitPowerDungeon", {
-  //     ...powerDungeon.locales.get("exitPowerDungeon"),
-  //     goal: true,
-  //   });
+  link.subscribe("exitWisdomDungeon", () => {
+    if (!link.hasPendantOfWisdom) {
+      return false;
+    }
 
-  //   openLostWoods();
+    // setTimeout(() => {
+    updateRegionDrawing(
+      formatUpdateRegionDrawingData(wisdomDungeon, "exitWisdomDungeon"),
+    );
 
-  //   updateRegionDrawing(
-  //     formateUpdateRegionDrawingData(powerDungeon, "pendantOfPower"),
-  //   );
-  // });
+    const wisdomDungeonLocation = hyrule.locales.get("wisdomDungeon");
 
-  // link.subscribe("pendantOfCourage", () => {
-  //   link.hasPendantOfCourage = true;
+    link.region = {
+      region: hyrule,
+      linkPosition: {
+        x: wisdomDungeonLocation.x + hyrule.axisCorrection.x,
+        y: wisdomDungeonLocation.y + hyrule.axisCorrection.y,
+      },
+    };
+    // }, linkSpeed);
+  });
 
-  //   courageDungeon.locales.set("pendantOfCourage", {
-  //     ...courageDungeon.locales.get("pendantOfCourage"),
-  //     goal: false,
-  //   });
-  //   courageDungeon.locales.set("exitCourageDungeon", {
-  //     ...courageDungeon.locales.get("exitCourageDungeon"),
-  //     goal: true,
-  //   });
+  link.subscribe("pendantOfPower", () => {
+    if (link.hasPendantOfPower) return false;
 
-  //   openLostWoods();
+    link.hasPendantOfPower = true;
 
-  //   updateRegionDrawing(
-  //     formateUpdateRegionDrawingData(courageDungeon, "pendantOfCourage"),
-  //   );
-  // });
+    powerDungeon.locales.set("pendantOfPower", {
+      ...powerDungeon.locales.get("pendantOfPower"),
+      goal: false,
+    });
+    powerDungeon.locales.set("exitPowerDungeon", {
+      ...powerDungeon.locales.get("exitPowerDungeon"),
+      goal: true,
+    });
 
-  // link.subscribe("pendantOfWisdom", () => {
-  //   link.hasPendantOfWisdom = true;
+    openLostWoods();
 
-  //   wisdomDungeon.locales.set("pendantOfWisdom", {
-  //     ...wisdomDungeon.locales.get("pendantOfWisdom"),
-  //     goal: false,
-  //   });
-  //   wisdomDungeon.locales.set("exitWisdomDungeon", {
-  //     ...wisdomDungeon.locales.get("exitWisdomDungeon"),
-  //     goal: true,
-  //   });
+    setTimeout(() => {
+      updateRegionDrawing({
+        ...formatUpdateRegionDrawingData(powerDungeon, "pendantOfPower"),
+        animationEndHandlers: [
+          () => {
+            setTimeout(() => {
+              moveLink(thinkLink(powerDungeon, { x: link.x, y: link.y }));
+            }, linkSpeed);
+          },
+        ],
+      });
+    }, linkSpeed);
+  });
 
-  //   openLostWoods();
+  link.subscribe("pendantOfCourage", () => {
+    if (link.hasPendantOfCourage) return false;
 
-  //   updateRegionDrawing(
-  //     formateUpdateRegionDrawingData(wisdomDungeon, "pendantOfWisdom"),
-  //   );
-  // });
+    link.hasPendantOfCourage = true;
 
-  // link.subscribe("pathUpdated", () => {
-  //   console.log("pathUpdated");
+    courageDungeon.locales.set("pendantOfCourage", {
+      ...courageDungeon.locales.get("pendantOfCourage"),
+      goal: false,
+    });
+    courageDungeon.locales.set("exitCourageDungeon", {
+      ...courageDungeon.locales.get("exitCourageDungeon"),
+      goal: true,
+    });
 
-  //   if (!link.path.length) return false; // Fim de jogo
+    openLostWoods();
 
-  //   const nextMovement = link.path[0];
+    setTimeout(() => {
+      updateRegionDrawing({
+        ...formatUpdateRegionDrawingData(courageDungeon, "pendantOfCourage"),
+        animationEndHandlers: [
+          () => {
+            setTimeout(() => {
+              moveLink(thinkLink(courageDungeon, { x: link.x, y: link.y }));
+            }, linkSpeed);
+          },
+        ],
+      });
+    }, linkSpeed);
+  });
 
-  //   if (
-  //     link.x !== nextMovement.position.x ||
-  //     link.y !== nextMovement.position.y
-  //   ) {
-  //     link.position = nextMovement.position;
-  //   } else {
-  //     // thinkLink();
-  //   }
-  // });
+  link.subscribe("pendantOfWisdom", () => {
+    if (link.hasPendantOfWisdom) return false;
 
-  // link.subscribe("linksHouse", () => {
-  //   console.log("linksHouse", {
-  //     region: link.region,
-  //     currentLinkPosition: { x: link.x, y: link.y },
-  //   });
-  //   updateRegionDrawing({
-  //     region: link.region,
-  //     currentLinkPosition: { x: link.x, y: link.y },
-  //   });
-  //   //thinkLink();
-  // });
+    link.hasPendantOfWisdom = true;
 
-  // link.subscribe("movementPermissionChange", () => {
-  //   if (link.canMove) {
-  //     setTimeout(() => {
-  //       // thinkLink();
-  //     }, 500);
-  //   }
-  // });
+    wisdomDungeon.locales.set("pendantOfWisdom", {
+      ...wisdomDungeon.locales.get("pendantOfWisdom"),
+      goal: false,
+    });
+    wisdomDungeon.locales.set("exitWisdomDungeon", {
+      ...wisdomDungeon.locales.get("exitWisdomDungeon"),
+      goal: true,
+    });
+
+    openLostWoods();
+
+    setTimeout(() => {
+      updateRegionDrawing({
+        ...formatUpdateRegionDrawingData(wisdomDungeon, "pendantOfWisdom"),
+        animationEndHandlers: [
+          () => {
+            setTimeout(() => {
+              moveLink(thinkLink(wisdomDungeon, { x: link.x, y: link.y }));
+            }, linkSpeed);
+          },
+        ],
+      });
+    }, linkSpeed);
+  });
+
+  link.subscribe("linksHouse", () => {
+    if (
+      !(
+        link.hasPendantOfPower &&
+        link.hasPendantOfCourage &&
+        link.hasPendantOfWisdom
+      )
+    ) {
+      return false;
+    }
+
+    hyrule.locales.set("linksHouse", {
+      ...hyrule.locales.get("linksHouse"),
+      goal: false,
+    });
+
+    hyrule.locales.set("lostWoods", {
+      ...hyrule.locales.get("lostWoods"),
+      goal: true,
+    });
+
+    setTimeout(() => {
+      updateRegionDrawing({
+        region: hyrule,
+        currentLinkPosition: { x: link.x, y: link.y },
+        animationEndHandlers: [
+          () => {
+            setTimeout(() => {
+              moveLink(thinkLink(hyrule, { x: link.x, y: link.y }));
+            }, linkSpeed);
+          },
+        ],
+      });
+    }, linkSpeed);
+  });
+
+  link.subscribe("lostWoods", () => {
+    if (
+      !(
+        link.hasPendantOfPower &&
+        link.hasPendantOfCourage &&
+        link.hasPendantOfWisdom
+      )
+    ) {
+      return false;
+    }
+
+    setTimeout(() => {
+      updateRegionDrawing({
+        region: hyrule,
+        currentLinkPosition: { x: link.x, y: link.y },
+      });
+    }, linkSpeed);
+  });
 
   link.region = { region: hyrule };
 }
@@ -784,33 +748,9 @@ function handlePlayButtonClick(event) {
   }, 500);
 }
 
-// Testes
-
-function handleKeydown(event) {
-  chooseGoal();
-  if (event.key === "ArrowUp") {
-    if (link.y - 1 >= link.region.axisCorrection.y) {
-      link.y -= 1;
-    }
-  } else if (event.key === "ArrowDown") {
-    if (link.y + 1 < link.region.map.length - link.region.axisCorrection.y) {
-      link.y += 1;
-    }
-  } else if (event.key === "ArrowLeft") {
-    if (link.x - 1 >= link.region.axisCorrection.x) {
-      link.x -= 1;
-    }
-  } else if (event.key === "ArrowRight") {
-    if (link.x + 1 < link.region.map[0].length - link.region.axisCorrection.x) {
-      link.x += 1;
-    }
-  }
-}
-
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Adicionando *event listeners*
 
 window.document
   .getElementById("play")
   .addEventListener("click", handlePlayButtonClick);
-window.addEventListener("keydown", handleKeydown);

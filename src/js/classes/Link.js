@@ -44,28 +44,6 @@ class Link {
 
   set x(x) {
     this.#x = x;
-
-    if (
-      [...this.#region.locales.values()].some(
-        (position) =>
-          position.x + this.#region.axisCorrection.x === x &&
-          position.y + this.#region.axisCorrection.y === this.#y,
-      )
-    ) {
-      [...this.#region.locales.entries()].forEach(([locale, position]) => {
-        if (
-          position.x + this.#region.axisCorrection.x === x &&
-          position.y + this.#region.axisCorrection.y === this.#y
-        ) {
-          this.notify(locale, null);
-        }
-      });
-    } else {
-      this.notify("linkPositionChange", {
-        currentLinkPosition: { x, y: this.y },
-        region: this.#region,
-      });
-    }
   }
 
   get x() {
@@ -74,29 +52,6 @@ class Link {
 
   set y(y) {
     this.#y = y;
-
-    if (
-      [...this.#region.locales.values()].some(
-        (position) =>
-          position.x + this.#region.axisCorrection.x === this.#x &&
-          position.y + this.#region.axisCorrection.y === y,
-      )
-    ) {
-      [...this.#region.locales.entries()].forEach(([locale, position]) => {
-        if (
-          position.x + this.#region.axisCorrection.x === this.#x &&
-          position.y + this.#region.axisCorrection.y === y
-        ) {
-          this.notify(locale, null);
-        }
-      });
-    } else {
-      this.notify("linkPositionChange", {
-        currentLinkPosition: { x: this.x, y },
-        previousLinkPosition: { x: this.x, y: this.y },
-        region: this.#region,
-      });
-    }
   }
 
   get y() {
@@ -104,6 +59,9 @@ class Link {
   }
 
   set position({ x, y }) {
+    this.#x = x;
+    this.#y = y;
+
     if (
       [...this.#region.locales.values()].some(
         (position) =>
@@ -125,9 +83,6 @@ class Link {
         region: this.#region,
       });
     }
-
-    this.#x = x;
-    this.#y = y;
   }
 
   // get position() {

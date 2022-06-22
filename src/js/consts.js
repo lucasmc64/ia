@@ -255,6 +255,7 @@ const limbo = {
 
 const tileSize = 20;
 const defaultBackgroundColor = "#ffffff";
+const linkSpeed = 250;
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Exportações
@@ -267,4 +268,5 @@ export {
   limbo,
   tileSize,
   defaultBackgroundColor,
+  linkSpeed,
 };
