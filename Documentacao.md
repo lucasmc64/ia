@@ -1,14 +1,14 @@
 # Instruções e direcionamentos
 
-## Executável:
+## Executável
 
-O arquivo compactado (.zip) contém um portable para Windows (the-link-trials.exe) pelo qual é possível executar o programa.
+O arquivo compactado (.zip) contém um portable para Windows (_the-link-trials.exe_) pelo qual é possível executar o programa.
 
 - opcão pra live-server...
 - opção pra electron...
 - opção pra electron-builder...
 
-## Edição do mapa:
+## Edição do mapa
 
 É possivel editar os mapas no arquivo 'consts.js' (caminho: 'src/js').
 

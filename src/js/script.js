@@ -156,7 +156,7 @@ function unzipPath(path) {
   const formattedPath = [];
 
   while (currentMovement.parent !== null) {
-    formattedPath.unshift(currentMovement.position);
+    formattedPath.unshift(currentMovement);
     currentMovement = currentMovement.parent;
   }
 
@@ -196,13 +196,13 @@ function thinkLink(currentRegion, currentLinkPosition) {
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Função responsável por
 
-function moveLink(nextPositions = []) {
-  if (nextPositions.length === 0) return false;
+function moveLink(nextMovements = []) {
+  if (nextMovements.length === 0) return false;
 
-  link.position = nextPositions[0];
+  link.position = nextMovements[0].position;
 
   setTimeout(() => {
-    moveLink(nextPositions.slice(1));
+    moveLink(nextMovements.slice(1));
   }, linkSpeed);
 }
 
