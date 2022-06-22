@@ -202,6 +202,20 @@ const wisdomDungeonMap = [
   "wwwwwwwwwwwwwwwwwwwwwwwwwwww",
 ];
 
+
+const endMap = [
+    "-xxxxxx--xx-------xx--xxxxxx----",
+    "-xxxxxx--xxx------xx--xxxxxxxx--",
+    "-xx------xxxx-----xx--xx-----xx-",
+    "-xx------xx-xx----xx--xx------xx",
+    "-xxxxx---xx--xx---xx--xx------xx",
+    "-xxxxx---xx---xx--xx--xx------xx",
+    "-xx------xx----xx-xx--xx------xx",
+    "-xx------xx-----xxxx--xx-----xx-",
+    "-xxxxxx--xx------xxx--xxxxxxxx--",
+    "-xxxxxx--xx-------xx--xxxxxx----",
+];
+
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Regiões
 
