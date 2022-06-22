@@ -4,7 +4,8 @@
   "description": "Trabalho de IA",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron .",
+    "dist": "electron-builder"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,29 @@
   "bugs": {
     "url": "https://github.com/lucasmc64/ia/issues"
   },
-  "homepage": "https://github.com/lucasmc64/ia#readme"
+  "homepage": "https://github.com/lucasmc64/ia#readme",
+  "devDependencies": {
+    "electron": "latest",
+    "electron-builder": "latest"
+  },
+  "build": {
+    "appId": "the-link-trials",
+    "productName": "The Link Trials",
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "portable": {
+      "artifactName": "the-link-trials.exe"
+    },
+    "directories": {
+      "output": "build"
+    }
+  }
 }
