@@ -18,8 +18,8 @@
   },
   "homepage": "https://github.com/lucasmc64/ia#readme",
   "devDependencies": {
-    "electron": "latest",
-    "electron-builder": "latest"
+    "electron": "^19.0.0",
+    "electron-builder": "^23.0.0"
   },
   "build": {
     "appId": "the-link-trials",
