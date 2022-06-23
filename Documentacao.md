@@ -60,7 +60,7 @@ O arquivo *package.json* contém scripts para uso do electron e do electron-buil
 
 `npm run dist`
 
-O executável será gerado com base o Sistema Operacional utilizado, e estará guardado no diretório **build/**.
+O executável será gerado com base no Sistema Operacional utilizado, e estará guardado no diretório **build/**.
 
 
 #### [Documentação electron](https://www.electronjs.org/docs/latest)
