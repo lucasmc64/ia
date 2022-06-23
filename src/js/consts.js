@@ -19,7 +19,7 @@ const limboTerrains = new Map([
 ]);
 
 const endLandTerrains = new Map([
-  ["x", { cost: null, label: "Fim", color: "#935153" }],
+  ["x", { cost: null, label: "Fim", color: "#000000" }],
 ]);
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\

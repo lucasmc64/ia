@@ -215,12 +215,16 @@ function moveLink(nextMovements = []) {
   costsSection.dataset.costHeuristic = updatedCostHeuristic;
   costHeuristic.textContent = updatedCostHeuristic.toFixed(2);
 
+  totalCost.textContent = (currentMovement.cost + currentCostHeuristic).toFixed(
+    2,
+  );
+
   if (currentMovement.cost !== 0) {
     link.position = currentMovement.position;
 
     setTimeout(() => {
       moveLink(nextMovements.slice(1));
-    }, 500);
+    }, linkSpeed);
   } else {
     moveLink(nextMovements.slice(1));
   }
@@ -724,6 +728,8 @@ function start() {
   });
 
   link.subscribe("lostWoods", () => {
+    console.log("lostWoods");
+
     if (
       !(
         link.hasPendantOfPower &&
@@ -745,7 +751,7 @@ function start() {
         currentLinkPosition: { x: link.x, y: link.y },
       });
 
-      //link.region = { region: endLand };
+      link.region = { region: endLand };
     }, linkSpeed);
   });
 
