@@ -6,11 +6,17 @@ import {
   courageDungeon,
   wisdomDungeon,
   limbo,
+  endLand,
   biggestMapSize,
 } from "./regions.js";
 
 const canvas = window.document.getElementById("map");
 const context = canvas.getContext("2d");
+
+const costsSection = window.document.getElementById("costsSection");
+const costPath = window.document.getElementById("costPath");
+const costHeuristic = window.document.getElementById("costHeuristic");
+const totalCost = window.document.getElementById("totalCost");
 
 const link = new Link(0, 0, limbo);
 
@@ -133,7 +139,7 @@ function generateBestPath(
     newPath = [
       {
         position: { ...currentPosition },
-        cost: 0,
+        cost: Number(costsSection.dataset.costPath),
         heuristic: calculateHeuristics(currentPosition, goalPosition),
         parent: null,
       },
@@ -155,7 +161,7 @@ function unzipPath(path) {
   let currentMovement = path;
   const formattedPath = [];
 
-  while (currentMovement.parent !== null) {
+  while (currentMovement !== null) {
     formattedPath.unshift(currentMovement);
     currentMovement = currentMovement.parent;
   }
@@ -199,11 +205,25 @@ function thinkLink(currentRegion, currentLinkPosition) {
 function moveLink(nextMovements = []) {
   if (nextMovements.length === 0) return false;
 
-  link.position = nextMovements[0].position;
+  const currentMovement = nextMovements[0];
 
-  setTimeout(() => {
+  costsSection.dataset.costPath = currentMovement.cost;
+  costPath.textContent = currentMovement.cost;
+
+  const currentCostHeuristic = Number(costsSection.dataset.costHeuristic);
+  const updatedCostHeuristic = currentCostHeuristic + currentMovement.heuristic;
+  costsSection.dataset.costHeuristic = updatedCostHeuristic;
+  costHeuristic.textContent = updatedCostHeuristic.toFixed(2);
+
+  if (currentMovement.cost !== 0) {
+    link.position = currentMovement.position;
+
+    setTimeout(() => {
+      moveLink(nextMovements.slice(1));
+    }, 500);
+  } else {
     moveLink(nextMovements.slice(1));
-  }, linkSpeed);
+  }
 }
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
@@ -456,7 +476,6 @@ function start() {
       return false;
     }
 
-    // setTimeout(() => {
     updateRegionDrawing(formatUpdateRegionDrawingData(hyrule, "powerDungeon"));
 
     const exitPowerDungeon = powerDungeon.locales.get("exitPowerDungeon");
@@ -468,7 +487,6 @@ function start() {
         y: exitPowerDungeon.y + powerDungeon.axisCorrection.y,
       },
     };
-    // }, linkSpeed);
   });
 
   link.subscribe("courageDungeon", () => {
@@ -481,7 +499,6 @@ function start() {
       return false;
     }
 
-    // setTimeout(() => {
     updateRegionDrawing(
       formatUpdateRegionDrawingData(hyrule, "courageDungeon"),
     );
@@ -495,7 +512,6 @@ function start() {
         y: exitCourageDungeon.y + courageDungeon.axisCorrection.y,
       },
     };
-    // }, linkSpeed);
   });
 
   link.subscribe("wisdomDungeon", () => {
@@ -508,7 +524,6 @@ function start() {
       return false;
     }
 
-    // setTimeout(() => {
     updateRegionDrawing(formatUpdateRegionDrawingData(hyrule, "wisdomDungeon"));
 
     const exitWisdomDungeon = wisdomDungeon.locales.get("exitWisdomDungeon");
@@ -520,7 +535,6 @@ function start() {
         y: exitWisdomDungeon.y + wisdomDungeon.axisCorrection.y,
       },
     };
-    // }, linkSpeed);
   });
 
   link.subscribe("exitPowerDungeon", () => {
@@ -528,7 +542,6 @@ function start() {
       return false;
     }
 
-    // setTimeout(() => {
     updateRegionDrawing({
       ...formatUpdateRegionDrawingData(powerDungeon, "exitPowerDungeon"),
     });
@@ -542,7 +555,6 @@ function start() {
         y: powerDungeonLocation.y + hyrule.axisCorrection.y,
       },
     };
-    // }, linkSpeed);
   });
 
   link.subscribe("exitCourageDungeon", () => {
@@ -550,7 +562,6 @@ function start() {
       return false;
     }
 
-    // setTimeout(() => {
     updateRegionDrawing(
       formatUpdateRegionDrawingData(courageDungeon, "exitCourageDungeon"),
     );
@@ -564,7 +575,6 @@ function start() {
         y: courageDungeonLocation.y + hyrule.axisCorrection.y,
       },
     };
-    // }, linkSpeed);
   });
 
   link.subscribe("exitWisdomDungeon", () => {
@@ -572,7 +582,6 @@ function start() {
       return false;
     }
 
-    // setTimeout(() => {
     updateRegionDrawing(
       formatUpdateRegionDrawingData(wisdomDungeon, "exitWisdomDungeon"),
     );
@@ -586,7 +595,6 @@ function start() {
         y: wisdomDungeonLocation.y + hyrule.axisCorrection.y,
       },
     };
-    // }, linkSpeed);
   });
 
   link.subscribe("pendantOfPower", () => {
@@ -726,15 +734,24 @@ function start() {
       return false;
     }
 
+    hyrule.locales.set("lostWoods", {
+      ...hyrule.locales.get("lostWoods"),
+      goal: false,
+    });
+
     setTimeout(() => {
       updateRegionDrawing({
         region: hyrule,
         currentLinkPosition: { x: link.x, y: link.y },
       });
+
+      //link.region = { region: endLand };
     }, linkSpeed);
   });
 
   link.region = { region: hyrule };
+
+  costsSection.classList.add("show");
 }
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\

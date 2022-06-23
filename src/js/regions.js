@@ -4,6 +4,7 @@ import {
   courageDungeon,
   wisdomDungeon,
   limbo,
+  endLand,
 } from "./consts.js";
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
@@ -38,7 +39,7 @@ function mapPadding(map) {
   const mapWidth = newMap[0]?.length ?? 0;
 
   if (mapWidth !== biggestMapSize) {
-    axisCorrection.x = (biggestMapSize - newMap.length) / 2;
+    axisCorrection.x = (biggestMapSize - mapWidth) / 2;
 
     newMap = newMap.map((line) =>
       line
@@ -79,6 +80,10 @@ const newLimbo = {
   ...limbo,
   ...mapPadding(limbo.map),
 };
+const newEndLand = {
+  ...endLand,
+  ...mapPadding(endLand.map),
+};
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Exportações
@@ -89,5 +94,6 @@ export {
   newCourageDungeon as courageDungeon,
   newWisdomDungeon as wisdomDungeon,
   newLimbo as limbo,
+  newEndLand as endLand,
   biggestMapSize,
 };

@@ -17,6 +17,23 @@
       <span id="playIcon"></span>
     </button>
 
-    <canvas id="map"></canvas>
+    <div class="container">
+      <canvas id="map"></canvas>
+
+      <section
+        id="costsSection"
+        data-cost-path="0"
+        data-cost-heuristic="0"
+        data-total-cost="0"
+      >
+        <h2>Custos</h2>
+
+        <div id="costs">
+          <p><strong>Caminho:</strong> <span id="costPath">0</span></p>
+          <p><strong>Heurística:</strong> <span id="costHeuristic">0</span></p>
+          <p><strong>Total:</strong> <span id="totalCost">0</span></p>
+        </div>
+      </section>
+    </div>
   </body>
 </html>

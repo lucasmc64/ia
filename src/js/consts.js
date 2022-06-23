@@ -18,6 +18,10 @@ const limboTerrains = new Map([
   ["n", { cost: null, label: "Limbo", color: "#ffffff" }],
 ]);
 
+const endLandTerrains = new Map([
+  ["x", { cost: null, label: "Fim", color: "#935153" }],
+]);
+
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Imagens
 
@@ -212,55 +216,55 @@ const wisdomDungeonMap = [
   "wwwwwwwwwwwwwwwwwwwwwwwwwwww",
 ];
 
-
-const endMap = [
-    "-xxxxxx--xx-------xx--xxxxxx----",
-    "-xxxxxx--xxx------xx--xxxxxxxx--",
-    "-xx------xxxx-----xx--xx-----xx-",
-    "-xx------xx-xx----xx--xx------xx",
-    "-xxxxx---xx--xx---xx--xx------xx",
-    "-xxxxx---xx---xx--xx--xx------xx",
-    "-xx------xx----xx-xx--xx------xx",
-    "-xx------xx-----xxxx--xx-----xx-",
-    "-xxxxxx--xx------xxx--xxxxxxxx--",
-    "-xxxxxx--xx-------xx--xxxxxx----",
+const endLandMap = [
+  "-xxxxxx--xx-------xx--xxxxxx----",
+  "-xxxxxx--xxx------xx--xxxxxxxx--",
+  "-xx------xxxx-----xx--xx-----xx-",
+  "-xx------xx-xx----xx--xx------xx",
+  "-xxxxx---xx--xx---xx--xx------xx",
+  "-xxxxx---xx---xx--xx--xx------xx",
+  "-xx------xx----xx-xx--xx------xx",
+  "-xx------xx-----xxxx--xx-----xx-",
+  "-xxxxxx--xx------xxx--xxxxxxxx--",
+  "-xxxxxx--xx-------xx--xxxxxx----",
 ];
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Regiões
 
 const hyrule = {
-  id: "hyrule",
   map: [...hyruleMap],
   terrains: new Map(hyruleTerrains),
   locales: new Map(hyruleLocales),
 };
 
 const powerDungeon = {
-  id: "powerDungeon",
   map: [...powerDungeonMap],
   terrains: new Map(dungeonTerrains),
   locales: new Map(powerDungeonLocales),
 };
 
 const courageDungeon = {
-  id: "courageDungeon",
   map: [...courageDungeonMap],
   terrains: new Map(dungeonTerrains),
   locales: new Map(courageDungeonLocales),
 };
 
 const wisdomDungeon = {
-  id: "wisdomDungeon",
   map: [...wisdomDungeonMap],
   terrains: new Map(dungeonTerrains),
   locales: new Map(wisdomDungeonLocales),
 };
 
 const limbo = {
-  id: "limbo",
   map: [],
   terrains: new Map(limboTerrains),
+  locales: new Map(),
+};
+
+const endLand = {
+  map: [...endLandMap],
+  terrains: new Map(endLandTerrains),
   locales: new Map(),
 };
 
@@ -269,7 +273,7 @@ const limbo = {
 
 const tileSize = 20;
 const defaultBackgroundColor = "#ffffff";
-const linkSpeed = 250;
+const linkSpeed = 50;
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Exportações
@@ -280,6 +284,7 @@ export {
   courageDungeon,
   wisdomDungeon,
   limbo,
+  endLand,
   tileSize,
   defaultBackgroundColor,
   linkSpeed,
