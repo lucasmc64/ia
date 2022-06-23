@@ -273,7 +273,7 @@ const endLand = {
 
 const tileSize = 20;
 const defaultBackgroundColor = "#ffffff";
-const linkSpeed = 50;
+const linkSpeed = 250;
 
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 // Exportações
