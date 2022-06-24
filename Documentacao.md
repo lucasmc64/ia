@@ -3,7 +3,7 @@
 ## Executável
 
 Como o **MOODLE** limita o tamanho de arquivos, não foi possível enviar os executáveis já prontos anexos ao trabalho.
-Porém, eles estão disponíveis neste [**repositório aqui**](https://github.com/lucasmc64/ia) em Releases.
+Porém, eles estão disponíveis neste [**repositório aqui**](https://github.com/lucasmc64/ia) em **Releases**.
 Trata-se de um portable para Windows (_the-link-trials-win.exe_), e um _AppImage_ para Linux (_the-link-trials-linux.AppImage_) pelos quais é possível executar o programa.
 
 Caso seja do interesse do professor, existem outras formas de executar o programa:
