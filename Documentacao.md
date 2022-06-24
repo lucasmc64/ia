@@ -3,8 +3,8 @@
 ## Executável
 
 Como o **MOODLE** limita o tamanho de arquivos, não foi possível enviar os executáveis já prontos anexos ao trabalho.
-Porém, eles estão disponíveis neste [**repositório**](https://github.com/lucasmc64/ia).
-Trata-se de um portable para Windows (_the-link-trials-win.exe_), e um *AppImage* para Linux (_the-link-trials-linux.AppImage_) pelos quais é possível executar o programa.
+Porém, eles estão disponíveis neste [**repositório aqui**](https://github.com/lucasmc64/ia).
+Trata-se de um portable para Windows (_the-link-trials-win.exe_), e um _AppImage_ para Linux (_the-link-trials-linux.AppImage_) pelos quais é possível executar o programa.
 
 Caso seja do interesse do professor, existem outras formas de executar o programa:
 
@@ -16,6 +16,7 @@ Ele permite executar o código do programa pelo navegador.
 #### Instalação:
 
 Pré-requisitos:
+
 - NPM
 - Node.JS
 
@@ -39,15 +40,16 @@ Isso abrirá o diretório numa aba no navegador. Pode-se executar o programa ao 
 
 ### Usando electron e electron-builder:
 
-O `electron` é um *framework* voltado para a construção de aplicativos *desktop* usando tecnologias de desenvolvimento WEB. O `electron-builder` é uma solução para empacotar e construir aplicativos baseados em Electron prontos para distribuição.
+O `electron` é um _framework_ voltado para a construção de aplicativos _desktop_ usando tecnologias de desenvolvimento WEB. O `electron-builder` é uma solução para empacotar e construir aplicativos baseados em Electron prontos para distribuição.
 
 #### Instalação:
 
 Pré-requisitos:
+
 - NPM
 - Node.JS
 
-No arquivo *package.json*, ambos estão incluídos como dependências.
+No arquivo _package.json_, ambos estão incluídos como dependências.
 Para intalá-los basta executar o seguinte comando num terminal aberto no diretório do código fonte:
 
 ```bash
@@ -56,14 +58,13 @@ npm install
 
 #### Execução:
 
-O arquivo *package.json* contém scripts para uso do `electron` e do `electron-builder`:
+O arquivo _package.json_ contém scripts para uso do `electron` e do `electron-builder`:
 
 - Para executar o programa imediatamente com o electron, use o comando:
 
 ```bash
 npm run start
 ```
-
 
 - Para gerar um executável com o electron-builder, use o comando:
 
@@ -84,12 +85,13 @@ O executável será gerado com base no Sistema Operacional utilizado, e estará 
 É possível editar os mapas no arquivo **consts.js** (caminho: **src/js**). O código do program também tem a capacidade de lidar com mapas de dimensões maiores que as definidas na orientação do trabalho.
 
 Os mapas estão guardados nos seguintes arrays:
-- *hyruleMap*;
-- *powerDungeonMap*;
-- *courageDungeonMap*;
-- *wisdomDungeonMap*;
+
+- _hyruleMap_;
+- _powerDungeonMap_;
+- _courageDungeonMap_;
+- _wisdomDungeonMap_;
 
 Cada quadrado de terreno é representado por um **char**, por exemplo: **"g"** representa o terreno **Grama**. E os possíveis valores para terrenos são aqueles guardados nos mapeamentos:
-- *hyruleTerrains*;
-- *dungeonTerrains*;
 
+- _hyruleTerrains_;
+- _dungeonTerrains_;
