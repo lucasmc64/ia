@@ -79,7 +79,7 @@ O executável será gerado com base no Sistema Operacional utilizado, e estará 
 
 ## Edição do mapa
 
-É possível editar os mapas no arquivo 'consts.js' (caminho: 'src/js'). O código do program também tem a capacidade de lidar com mapas de dimensões maiores que as definidas na orientação do trabalho.
+É possível editar os mapas no arquivo **consts.js** (caminho: **src/js**). O código do program também tem a capacidade de lidar com mapas de dimensões maiores que as definidas na orientação do trabalho.
 
 Os mapas estão guardados nos seguintes arrays:
 - *hyruleMap*;
