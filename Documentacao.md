@@ -2,7 +2,9 @@
 
 ## Executável
 
-O arquivo compactado (*.zip*) contém um portable para Windows (_the-link-trials-win.exe_), e um *AppImage* para Linux (_the-link-trials-linux_) pelos quais é possível executar o programa.
+Como o **MOODLE** limita o tamanho de arquivos, não foi possível enviar os executáveis já prontos anexos ao trabalho.
+Porém, eles estão disponíveis neste [git](https://github.com/lucasmc64/ia).
+Trata-se de um portable para Windows (_the-link-trials-win.exe_), e um *AppImage* para Linux (_the-link-trials-linux_) pelos quais é possível executar o programa.
 
 Caso seja do interesse do professor, existem outras formas de executar o programa:
 
